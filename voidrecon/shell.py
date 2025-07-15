@@ -33,7 +33,7 @@ class VoidReconShell(cmd.Cmd):
     def do_use(self, arg):
         try:
             self.current_module = module_loader.load_module(arg)
-            print(f"[+] Module selected: {self.current_module}")
+            print(f"[+] Module selected: {arg}")
         except Exception as e:
             print(e)
     def do_set(self, arg):
@@ -73,7 +73,7 @@ class VoidReconShell(cmd.Cmd):
 
     def do_exit(self, arg):
         print("[+] Exiting VoidRecon Shell...")
-        return True
+        exit()
 
 
 class Main:
