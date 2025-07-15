@@ -3,7 +3,7 @@
 # search, use, set TARGET, set PORT, run
 
 import cmd
-
+from core import module_loader, scanner_runner
 
 def print_banner():
     banner = r"""
@@ -24,20 +24,56 @@ def print_banner():
 class VoidReconShell(cmd.Cmd):
     prompt = "VoidRecon > "
 
-    def do_use(self, arg):
-        print(f"[+] Module selected: {arg}")
+    def __init__(self):
+        super().__init__()
+        self.current_module = None
+        self.target = None
+        self.port = None
 
+    def do_use(self, arg):
+        try:
+            self.current_module = module_loader.load_module(arg)
+            print(f"[+] Module selected: {self.current_module}")
+        except Exception as e:
+            print(e)
     def do_set(self, arg):
-        print(f"[+] Set argument: {arg}")
+        parts = arg.split()
+        if len(parts) != 2:
+            print("[!] Usage: set <OPTIONS> <VALUE>")
+            return
+        key, value = parts
+        if key.upper() == "TARGET":
+            self.target = value
+        elif key.upper() == "PORT":
+            self.port = value
+        else:
+            print(f"[!] Unknown option: {key}")
+            return
+        print(f"[+] {key.upper()} set to {value}")
+
+    def do_show(self, arg):
+        print("[*] Current Settings:")
+        print(f"    Module: {self.current_module.__name__ if self.current_module else 'None'}")
+        print(f"    TARGET: {self.target}")
+        print(f"    PORT: {self.port}")
 
     def do_run(self, arg):
-        print("[+] Running module...")
+        if not self.current_module:
+            print("[!] No Module selected. Use 'use' command first.")
+            return
+        options = {
+            'TARGET': self.target,
+            'PORT': self.port
+        }
+        try:
+            print("[*] Running module...")
+            scanner_runner.run_module(self.current_module, options)
+        except Exception as e:
+            print(e)
 
     def do_exit(self, arg):
-        print("[+] Exiting...")
-
-    def do_akh(self, arg):
-        print("aksdjfkdjsf")
+        print("[+] Exiting VoidRecon Shell...")
+        return True
 
 
 class Main:
