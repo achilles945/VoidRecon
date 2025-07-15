@@ -1,0 +1,55 @@
+# voidrecon/scanner.py
+import textwrap
+import argparse
+from core import module_loader, scanner_runner
+import shell, visual
+import sys
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="VoidRecon CLI Scanner",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=textwrap.dedent('''Example:
+            voidrecon.py --module network.portscan --target 192.168.1.1 --port 21
+            voidrecon.py --shell
+            voidrecon.py --gui
+        '''))
+    parser.add_argument('--shell', action='store_true', help='Launch Shell Interface')
+    parser.add_argument('--gui', action='store_true', help='Launch Graphical Interface')
+    parser.add_argument('--module', required=False, help='Module name (e.g., network.portscan)')
+    parser.add_argument('--target', required=False, help='Target IP or domain')
+    parser.add_argument('--port', help='Optional port')
+    args = parser.parse_args() 
+
+    if args.shell == True:
+        try: 
+            interface_class = getattr(shell, 'Main')
+            instance = interface_class()
+            instance.run()
+        except AttributeError as e:
+            print(e)
+        except Exception as e:
+            print(f"[!] Error while running interface: {e}")
+
+    elif args.gui == True:
+        try: 
+            interface_class = getattr(visual, 'Main')
+            instance = interface_class()
+            instance.run()
+        except AttributeError as e:
+            print(e)
+        except Exception as e:
+            print(f"[!] Error while running interface: {e}")
+    else :
+        # Load the module
+        mod = module_loader.load_module(args.module)
+        # Prepare options to pass to the module
+        options = {
+            'TARGET': args.target,
+            'PORT': args.port
+        }
+        # Run the module
+        scanner_runner.run_module(mod, options)
+
+if __name__ == '__main__':
+    main()
