@@ -1,28 +1,31 @@
 # voidrecon/shell.py
 
-# search, use, set TARGET, set PORT, run
+# search
 
 import cmd
+import os
+import importlib
+import modules
 from core import module_loader, scanner_runner
+class banner:
+    def print_banner():
+        banner = r"""
+     888     888          d8b      888 8888888b.                                    
+     888     888          Y8P      888 888   Y88b                                   
+     888     888                   888 888    888                                   
+     Y88b   d88P  .d88b.  888  .d88888 888   d88P .d88b.   .d8888b .d88b.  88888b.  
+      Y88b d88P  d88""88b 888 d88" 888 8888888P" d8P  Y8b d88P"   d88""88b 888 "88b 
+       Y88o88P   888  888 888 888  888 888 T88b  88888888 888     888  888 888  888 
+        Y888P    Y88..88P 888 Y88b 888 888  T88b Y8b.     Y88b.   Y88..88P 888  888 
+         Y8P      "Y88P"  888  "Y88888 888   T88b "Y8888   "Y8888P "Y88P"  888  888 
 
-def print_banner():
-    banner = r"""
- 888     888          d8b      888 8888888b.                                    
- 888     888          Y8P      888 888   Y88b                                   
- 888     888                   888 888    888                                   
- Y88b   d88P  .d88b.  888  .d88888 888   d88P .d88b.   .d8888b .d88b.  88888b.  
-  Y88b d88P  d88""88b 888 d88" 888 8888888P" d8P  Y8b d88P"   d88""88b 888 "88b 
-   Y88o88P   888  888 888 888  888 888 T88b  88888888 888     888  888 888  888 
-    Y888P    Y88..88P 888 Y88b 888 888  T88b Y8b.     Y88b.   Y88..88P 888  888 
-     Y8P      "Y88P"  888  "Y88888 888   T88b "Y8888   "Y8888P "Y88P"  888  888 
-
-                    [*] VoidRecon - Modular Recon Toolkit
-    """
-    print(banner)
+                        [*] VoidRecon - Modular Recon Toolkit
+        """
+        print(banner)
 
 
 class VoidReconShell(cmd.Cmd):
-    prompt = "VoidRecon > "
+    prompt = "# VoidRecon > "
 
     def __init__(self):
         super().__init__()
@@ -70,17 +73,36 @@ class VoidReconShell(cmd.Cmd):
             scanner_runner.run_module(self.current_module, options)
         except Exception as e:
             print(e)
+    
+    def do_clear(self, arg):
+        os.system('clear')
+
+    def do_search(self, arg):
+        a = 0
+        dirs = ['network', 'webrecon', 'credentials', 'vulns', 'whois' ]
+        for i in dirs :
+            full_path = f'modules.{i}.{arg}'
+            try:
+                full_path = f'modules.{i}.{arg}'
+                module = importlib.import_module(full_path)
+                #print (f'[+] Module found: {full_path}' )
+                a = 1
+                break
+            except ModuleNotFoundError as e:
+                pass
+        if a == 1:
+            print (f'[+] Module found: {full_path}' )
+        else: 
+            print(f'[!] Module not found: {arg}')
+
 
     def do_exit(self, arg):
         print("[+] Exiting VoidRecon Shell...")
         exit()
 
-
-class Main:
-    print_banner()
+def run():
+    banner.print_banner()
     VoidReconShell().cmdloop()
-
-
 
 
 
