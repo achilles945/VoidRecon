@@ -6,7 +6,7 @@ import cmd
 import os
 import importlib
 import modules
-from core import module_loader, scanner_runner
+from core import module_loader, module_runner
 class banner:
     def print_banner():
         banner = r"""
@@ -70,7 +70,7 @@ class VoidReconShell(cmd.Cmd):
         }
         try:
             print("[*] Running module...")
-            scanner_runner.run_module(self.current_module, options)
+            module_runner.run_module(self.current_module, options)
         except Exception as e:
             print(e)
     

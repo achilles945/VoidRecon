@@ -1,7 +1,7 @@
 # voidrecon/voidrecon.py
 import textwrap
 import argparse
-from core import module_loader, scanner_runner
+from core import module_loader, module_runner
 import visual, shell
 import sys
 
@@ -47,7 +47,7 @@ def main():
             'PORT': args.port
         }
         # Run the module
-        scanner_runner.run_module(mod, options)
+        module_runner.run_module(mod, options)
 
 if __name__ == '__main__':
     main()
