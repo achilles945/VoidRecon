@@ -16,20 +16,9 @@ def main():
         '''))
     parser.add_argument('--shell', action='store_true', help='Launch Shell Interface')
     parser.add_argument('--gui', action='store_true', help='Launch Graphical Interface')
-    parser.add_argument('--module', help='Module name (e.g., network.portscan)')
-    parser.add_argument('--target', help='Target IP or domain')
-    parser.add_argument('--port', help='Optional port')
     args = parser.parse_args() 
 
-    if args.shell :
-        try: 
-            shell.run()
-            
-        except AttributeError as e:
-            print(e)
-        except Exception as e:
-            print(f"[!] Error while running interface: {e}")
-    elif args.gui :
+    if args.gui :
         try: 
             interface_class = getattr(visual, 'Main')
             instance = interface_class()
@@ -38,16 +27,13 @@ def main():
             print(e)
         except Exception as e:
             print(f"[!] Error while running interface: {e}")
-    else :
-        # Load the module
-        mod = module_loader.load_module(args.module)
-        # Prepare options to pass to the module
-        options = {
-            'TARGET': args.target,
-            'PORT': args.port
-        }
-        # Run the module
-        module_runner.run_module(mod, options)
+    else:        
+        try: 
+            shell.run()
+        except AttributeError as e:
+            print(e)
+        except Exception as e:
+            print(f"[!] Error while running interface: {e}")
 
 if __name__ == '__main__':
     main()
