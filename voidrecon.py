@@ -1,8 +1,7 @@
 # voidrecon/voidrecon.py
 import textwrap
 import argparse
-from core import module_loader, module_runner
-import visual, shell
+import voidrecon.core.framework as framework
 import sys
 
 def main():
@@ -17,23 +16,13 @@ def main():
     parser.add_argument('--shell', action='store_true', help='Launch Shell Interface')
     parser.add_argument('--gui', action='store_true', help='Launch Graphical Interface')
     args = parser.parse_args() 
-
-    if args.gui :
-        try: 
-            interface_class = getattr(visual, 'Main')
-            instance = interface_class()
-            instance.run()
-        except AttributeError as e:
-            print(e)
-        except Exception as e:
-            print(f"[!] Error while running interface: {e}")
-    else:        
-        try: 
-            shell.run()
-        except AttributeError as e:
-            print(e)
-        except Exception as e:
-            print(f"[!] Error while running interface: {e}")
+      
+    try: 
+        framework.run()
+    except AttributeError as e:
+        print(e)
+    except Exception as e:
+        print(f"[!] Error while running interface: {e}")
 
 if __name__ == '__main__':
     main()

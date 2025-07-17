@@ -5,8 +5,9 @@
 import cmd
 import os
 import importlib
-import modules
-from core import module_loader, module_runner
+import voidrecon.core.module as module
+import voidrecon.modules as modules
+
 class banner:
     def print_banner():
         banner = r"""
@@ -35,7 +36,7 @@ class VoidReconShell(cmd.Cmd):
 
     def do_use(self, arg):
         try:
-            self.current_module = module_loader.load_module(arg)
+            self.current_module = module.load_module(arg)
             print(f"[+] Module selected: {arg}")
         except Exception as e:
             print(e)
@@ -70,7 +71,7 @@ class VoidReconShell(cmd.Cmd):
         }
         try:
             print("[*] Running module...")
-            module_runner.run_module(self.current_module, options)
+            module.run_module(self.current_module, options)
         except Exception as e:
             print(e)
     

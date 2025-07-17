@@ -11,7 +11,6 @@ The VoidRecon is a modular reconnaissance tool for ethical hackers, bug bounty h
 - [Directory Structure](#directory-structure)
 - [Example Usage](#example-usage)
 - [Planned Modules](#planned-modules)
-- [Installation](#installation)
 - [License](#license)
 
 ---
@@ -21,7 +20,7 @@ The VoidRecon is a modular reconnaissance tool for ethical hackers, bug bounty h
 - Modular scanner framework
 - Support both network and web application recon
 - Dynamic module loading
-- CLI & Interactive shell interface
+- Interactive shell interface
 - Extensible architecture (add your own modules easily)
 - Output reports saved automatically
 - Easy to install and use
@@ -32,25 +31,15 @@ The VoidRecon is a modular reconnaissance tool for ethical hackers, bug bounty h
 
 ```
 VoidRecon/
-├── .github/
-│   ├── ISSUE_TEMPLATE/
-│   │   ├── bug_report.md
-│   │   └── feature_request.md
-│   ├── workflows/
-│   │   └── python-app.yml               # GitHub Actions CI
-│   └── CODEOWNERS
 │
 ├── voidrecon/                           # Installable Python package
 │   ├── __init__.py
-│   ├── scanner.py                       # CLI entry point
-│   ├── shell.py                         # Interactive shell
-│   ├── visual.py                        # Optional GUI in future
 │   │
 │   ├── core/
 │   │   ├── __init__.py
-│   │   ├── module_loader.py             # Dynamic loader
-│   │   ├── scanner_runner.py            # Executes modules
-│   │   └── state.py                     # Shell state management
+│   │   ├── framework.py             # CMD Shell
+│   │   ├── base.py                  # Main Logic
+│   │   ├── module.py                # Executes modules
 │   │
 │   ├── modules/
 │   │   ├── __init__.py
@@ -60,75 +49,32 @@ VoidRecon/
 │   │   │   ├── ftp-anon.py
 │   │   │   └── ping-sweep.py
 │   │   ├── webrecon/
-│   │   │   ├── __init__.py
-│   │   │   ├── http-headers.py
-│   │   │   ├── dir-bruteforce.py
-│   │   │   └── cms.py
 │   │   ├── whois/
-│   │   │   ├── __init__.py
-│   │   │   ├── whois-lookup.py
-│   │   │   └── reverse-whois.py
 │   │   ├── vulns/
-│   │   │   └── __init__.py
 │   │   ├── credentials/
-│   │   │   └── __init__.py
 │   │   ├── post/
-│   │   │   └── __init__.py
 │   │   └── auxiliary/
-│   │       └── __init__.py
-│   │
-│   ├── database/
-│   │   ├── __init__.py
-│   │   ├── db.py                        # SQLite handling
-│   │   └── voidrecon.db                 # Auto-created
-│   │
-│   ├── output/
-│   │   └── report.txt                   # Output file(s)
 │   │
 │   └── utils/
 │       ├── __init__.py
 │       └── logger.py
 │
-├── tests/
-│   ├── __init__.py
-│   ├── test_module_loader.py
-│   ├── test_portscan.py
-│   └── test_shell.py
-│
-├── docs/
-│   ├── index.md                         # Project overview
-│   ├── usage.md                         # How to use
-│   ├── dev_guide.md                     # Module writing, contribution
-│   └── modules.md                       # Docs for each module
-│
+├── voidrecon.py                         # CLI Entry Point
 ├── .gitignore
 ├── LICENSE                              # e.g. MIT
-├── CODE_OF_CONDUCT.md
-├── CONTRIBUTING.md
 ├── requirements.txt
-├── pyproject.toml                       # Modern Python packaging
-├── setup.py                             # pip installable
-├── setup.cfg                            # Optional tool configs
-├── MANIFEST.in                          # Include non-code files
 ├── README.md                            # Main overview
-├── setup.sh                             # Bash installer
-└── Dockerfile                           # Optional container build
+
 ```
 
 ---
 
 ## Example Usage
 
-### CLI Mode
-
-```bash
-python scanner.py --module portscan --target 192.168.1.1
-```
-
 ### Shell Mode
 
 ```bash
-python shell.py
+python3 voidrecon.py
 VoidRecon > use network/portscan
 VoidRecon > set TARGET 192.168.1.1
 VoidRecon > run
@@ -155,14 +101,6 @@ VoidRecon > run
 
 --- 
 
-## Installation
-
-### Quick Install (Linux/macOS)
-
-```bash
-chmod +x setup.sh
-./setup.sh
-```
 
 ### Manual (Python 3.8 +)
 
