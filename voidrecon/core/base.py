@@ -4,7 +4,6 @@
 
 import importlib
 from voidrecon.core import shell
-import voidrecon.core.modrunner as modrunner
 import voidrecon.modules as modules
 import voidrecon.core.banner as banner
 
@@ -14,8 +13,8 @@ class Recon():
         super().__init__()
         self.options = {}
         self.current_module = None
-        self.target = None
-        self.port = None
+        self.target = 'google.com'
+        self.port = '80'
 
 
     #==================================================
@@ -78,11 +77,13 @@ class Recon():
     def load_module(self, arg):
         # logic to load module
         try:
-            self.current_module = modrunner.module_loader(arg)
-            print(f"[+] Module selected: {arg}")
-            print(f"[DEBUG] Loaded module object: {self.current_module}")
-        except Exception as e:
-            print(e)
+            module_name = arg 
+            full_path = f'voidrecon.modules.{module_name}'
+            self.current_module = importlib.import_module(full_path)
+            print(f"[+] Module selected: {module_name}")
+        except ModuleNotFoundError as e:
+            print(f"[!] Module not found: {module_name}")
+            raise e
 
     def module_info(self):
         # logic to show modules information 
@@ -120,12 +121,15 @@ class Recon():
             'TARGET': self.target,
             'PORT': self.port
         }
-        try:
+        try: 
             print("[*] Running module...")
-            modrunner.run_module(self.current_module, options)
+            mod_class = getattr(self.current_module, 'Recon')
+            instance = mod_class(options)
+            instance.run()
         except Exception as e:
-            print(e)
-        return "Module executed"
+            print(f"[!] Error while running module: {e}")
+
+
 
     def stop_module(self):
         # logic to stop execution of module

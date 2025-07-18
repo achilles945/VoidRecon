@@ -1,7 +1,8 @@
 # voidrecon/voidrecon.py
 import textwrap
 import argparse
-import voidrecon.core.framework as framework
+import voidrecon.core.shell as shell
+import voidrecon.core.banner as banner
 import sys
 
 def main():
@@ -18,7 +19,9 @@ def main():
     args = parser.parse_args() 
       
     try: 
-        framework.run()
+        cli = shell.Shell()
+        banner.print_banner()
+        cli.cmdloop()
     except AttributeError as e:
         print(e)
     except Exception as e:

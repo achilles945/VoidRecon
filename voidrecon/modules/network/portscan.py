@@ -12,7 +12,7 @@ info = {
     }
 }
 
-class ReconModule:
+class Recon:
     def __init__(self, options):
         self.target = options.get('TARGET')
         ports = options.get('PORT')

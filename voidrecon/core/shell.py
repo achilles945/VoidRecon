@@ -40,10 +40,13 @@ class Shell(cmd.Cmd):
 
 
     def do_show(self, arg):
-        print("[*] Current Settings:")
-        print(f"    Module: {self.current_module.__name__ if self.current_module else 'None'}")
-        print(f"    TARGET: {self.target}")
-        print(f"    PORT: {self.port}")
+        try:
+            print("[*] Current Settings:")
+            print(f"    Module: {self.current_module.__name__ if self.current_module else 'None'}")
+            print(f"    TARGET: {self.target}")
+            print(f"    PORT: {self.port}")
+        except Exception as e:
+            print(e)
 
 
     def do_run(self, arg):
@@ -59,8 +62,7 @@ class Shell(cmd.Cmd):
 
     def do_search(self, arg):
         try:
-            path = self.recon.search_modules(arg)
-            print(path)
+            self.recon.search_modules(arg)
         except Exception as e:
             print(e)
 
