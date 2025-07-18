@@ -3,17 +3,17 @@
 import importlib
 
 
-def load_module(module_path):
+def module_loader(module_name):
     """
     Load module dynamically from voidrecon.modules
     e.g., 'network.portscan' -> voidrecon.modules.network.portscan
     """
     try:
-        full_path = f'voidrecon.modules.{module_path}'
+        full_path = f'voidrecon.modules.{module_name}'
         module = importlib.import_module(full_path)
         return module 
     except ModuleNotFoundError as e:
-        print(f"[!] Module not found: {module_path}")
+        print(f"[!] Module not found: {module_name}")
         raise e
 
 

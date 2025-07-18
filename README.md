@@ -9,6 +9,7 @@ The VoidRecon is a modular reconnaissance tool for ethical hackers, bug bounty h
 
 - [Features](#features)
 - [Directory Structure](#directory-structure)
+- [Logic](#logic)
 - [Example Usage](#example-usage)
 - [Planned Modules](#planned-modules)
 - [License](#license)
@@ -68,6 +69,36 @@ VoidRecon/
 ```
 
 ---
+
+
+## Logic
+
+```
+                            +------------------+
+                            |  voidrecon.py    |  <-- Entry Point
+                            +--------+---------+
+                                    |
+            +------------------------+-------------------------+
+            |                                                  |
+    +------------------+                             +------------------+
+    |  Shell Interface |                             |  Web Interface   |
+    |   (shell.py)     |                             |   (web.py)       |
+    +--------+---------+                             +--------+---------+
+            |                                                  |
+            |                                                  |
+            v                                                  v
++---------------------------+                   +---------------------------+
+|       Core Engine         |  <-------------   |       Core Engine         |
+|      (base.Recon)         |                   |      (base.Recon)         |
++-----------+---------------+                   +-----------+---------------+
+            |                                                   |
+     +------+-------+                                   +-------+-------+
+     | Module Loader|                                   |   Config Mgmt |
+     | (modrunner)  |                                   |   / Execution |
+     +--------------+                                   +---------------+
+
+```
+
 
 ## Example Usage
 
