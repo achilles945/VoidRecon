@@ -21,7 +21,7 @@ class Shell(cmd.Cmd):
             module_name = self.recon.load_module(arg)
             print(f"[+] Module selected: {module_name}")
         except Exception as e:
-            print(f"[!] Cannot load module {e}")
+            print(f"[!] Module not selected: {e}")
 
 
     def do_set(self, arg):
@@ -32,18 +32,33 @@ class Shell(cmd.Cmd):
             return
         try :
             a = self.recon.set_option(arg)
-            print(f"[+] {setkey} set to: {a}")
+            print(a)
         except Exception as e:
-            print(f"[!] Cannot set option {e}")
+            print(f"[!] Error while setting option: {e}")
+
+    
+    def do_unset(self, arg):
+        try:
+            a = self.recon.unset_option(arg)
+            if a == True:
+                print(f"{arg}: None")
+        except Exception as e:
+            print(f"[!] Error while unsetting option: {e}")
+
 
     def do_show(self, arg):
-        try:
-            print("[*] Current Settings:")
-            print(f"    Module: {self.current_module.__name__ if self.current_module else 'None'}")
-            print(f"    TARGET: {self.target}")
-            print(f"    PORT: {self.port}")
-        except Exception as e:
-            print(e)
+        if arg == 'options':
+            try:
+                option_template = self.recon.show_options()
+                if option_template != False:
+                    for key in option_template:
+                        print(f"{key} : {option_template[key]}")
+                else :
+                    print(f"[!] No module selected")
+            except Exception as e:
+                print(e)
+        else:
+            print("[!] Invalid option")
 
 
     def do_run(self, arg):
@@ -51,7 +66,7 @@ class Shell(cmd.Cmd):
             print("[*] Running module...")
             self.recon.run_module()
         except Exception as e:
-            print(e)
+            print(f"[!] No module selected: {e}")
 
 
     def do_clear(self, arg):
@@ -61,9 +76,29 @@ class Shell(cmd.Cmd):
     def do_search(self, arg):
         try:
             module_path = self.recon.search_modules(arg)
-            print (f'[+] Module found: {short_path}' )
+            if module_path != False:
+                print (f'[+] Module found: {module_path}' )
+            else:
+                print(f'[+] Module not found: {arg}')
+        except Exception as e:
+            print(f"Error while searching module: {e}")
+
+    def do_list(self,arg):
+        try :
+            modlist = self.recon.list_modules()
+            for mod in modlist:
+                print(mod)
+        except Exception as e:
+            print(f"[!] Error while setting: {e}")
+    
+    def do_info(self, arg):     # Info formatting to do
+        try :
+            info = self.recon.module_info(arg)
+            for key in info:
+                print(f"{key} : {info[key]}")
         except Exception as e:
             print(e)
+
 
 
     def do_exit(self, arg):

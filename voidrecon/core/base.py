@@ -2,6 +2,7 @@
 
 # Core logic of VoidRecon
 
+import os
 import importlib
 from voidrecon.core import shell
 import voidrecon.modules as modules
@@ -28,9 +29,6 @@ class Recon():
     #==================================================
 
 
-    def start(self):  
-        banner.print_banner()
-
     def help(self):
         # logic to show help page
         return 0
@@ -54,45 +52,44 @@ class Recon():
 
     def list_modules(self):
         # logic to list modules
-        return 0
+        modlist = []
+        file = "/voidrecon/modules/module_list.txt"
+        file_path = os.getcwd() +file
+        with open(file_path, 'r') as f:
+            for index, line in enumerate(f):
+                modlist.append(line)
+        return modlist
+
 
     def search_modules(self, keyword):
         # logic to search modules
-        a = 0
-        dirs = ['network', 'webrecon', 'credentials', 'vulns', 'whois' ]
-        for i in dirs :
-            full_path = f'voidrecon.modules.{i}.{keyword}'
-            try:
-                full_path = f'voidrecon.modules.{i}.{keyword}'
-                module = importlib.import_module(full_path)
-                #print (f'[+] Module found: {full_path}' )
-                short_path = f'modules.{i}.{keyword}'
-                a = 1
-                break
-            except ModuleNotFoundError as e:
-                pass
-        if a == 1:
-            #print (f'[+] Module found: {full_path}' )
-            #print (f'[+] Module found: {short_path}' )
-            return short_path
+        file = "/voidrecon/modules/module_list.txt"
+        file_path = os.getcwd() +file
+        with open(file_path, 'r') as f:
+            for index, line in enumerate(f):
+                if keyword in line:
+                    return line
+                    break
+            else:
+                return False
 
 
     def load_module(self, arg):
         # logic to load module
-        try:
-            module_name = arg 
-            full_path = f'voidrecon.modules.{module_name}'
-            self.current_module = importlib.import_module(full_path)
-            #print(f"[+] Module selected: {module_name}")
+        module_name = arg 
+        full_path = f'voidrecon.modules.{module_name}'
+        self.current_module = importlib.import_module(full_path)
+        self.options = getattr(self.current_module, 'option_template')
 
-            return module_name
-        except ModuleNotFoundError as e:
-            print(f"[!] Module not found: {module_name}")
-            raise e
+        return module_name
 
-    def module_info(self):
+    def module_info(self, arg):
         # logic to show modules information 
-        return 0
+        module_name = arg 
+        full_path = f'voidrecon.modules.{module_name}'
+        info_module = importlib.import_module(full_path)
+        info = getattr(info_module, 'info')
+        return info
 
 
     #==================================================
@@ -100,34 +97,38 @@ class Recon():
     #==================================================
 
 
-    def show_options(self, options):
+    def show_options(self):
         # logic to show options
-        return 0
+        if self.current_module == None:
+            return False
+        return self.options
+
+
 
     def set_option(self, arg):
 
-        option_template = getattr(self.current_module, 'option_template')
+        #option_template = getattr(self.current_module, 'option_template')
         parts = arg.split()
         setkey, setvalue = parts
-        try:
-            for key in option_template:
-                if setkey == key :
-                    self.options[key] = setvalue
-                    return f"{self.options[key]}"
-                    break
-                else:
-                    pass
-            else :
-                return f"Invalid Option!"
-
-        except Exception as e:
-            print(e) 
+        for key in self.options:
+            if setkey == key :
+                self.options[key] = setvalue
+                return f"[+] {setkey} set to: {setvalue}"
+                break
+            else:
+                pass
+        else :
+            return f"Invalid Option!"
 
 
 
-    def unset_options(self, key):
+    def unset_option(self, key):
         # logic to unset options 
-        return 0 
+        try:
+            self.options[key] = None
+            return True
+        except Exception as e:
+            return False
 
 
     #==================================================
@@ -137,22 +138,15 @@ class Recon():
 
     def run_module(self):
         # logic to run the selected module with options
-        if not self.current_module:
-            print("[!] No Module selected. Use 'use' command first.")
-            return
-        try: 
-            #print("[*] Running module...")
+        try:
             mod_class = getattr(self.current_module, 'Recon')
             instance = mod_class(self.options)
             instance.run()
-        except Exception as e:
-            return e 
+            return True
+        except KeyboardInterrupt:
+            print("Interrupted!...")
+            return
 
-
-
-    def stop_module(self):
-        # logic to stop execution of module
-        return 0 
 
 
     
