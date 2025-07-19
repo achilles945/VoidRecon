@@ -21,15 +21,20 @@ class Shell(cmd.Cmd):
             module_name = self.recon.load_module(arg)
             print(f"[+] Module selected: {module_name}")
         except Exception as e:
-            print(e)
+            print(f"[!] Cannot load module {e}")
 
 
     def do_set(self, arg):
         parts = arg.split()
+        setkey, setvalue = parts
         if len(parts) != 2:
             print("[!] Usage: set <OPTIONS> <VALUE>")
             return
-        self.recon.set_option(arg)
+        try :
+            a = self.recon.set_option(arg)
+            print(f"[+] {setkey} set to: {a}")
+        except Exception as e:
+            print(f"[!] Cannot set option {e}")
 
     def do_show(self, arg):
         try:

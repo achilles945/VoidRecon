@@ -112,36 +112,13 @@ class Recon():
         try:
             for key in option_template:
                 if setkey == key :
-                    if setkey.upper() == "TARGET":
-                        self.options[key] = setvalue
-                        break
-                    elif setkey.upper() == "PORT":
-                        self.options[key] = setvalue
-                        break
-                    elif setkey.upper() == "URL":
-                        self.options[key] = setvalue
-                        break
-                    elif setkey.upper() == "WORDLIST":
-                        self.options[key] = setvalue
-                        break
-                    elif setkey.upper() == "EMAIL":
-                        self.options[key] = setvalue
-                        break
-                    elif setkey.upper() == "FILE":
-                        self.options[key] = setvalue
-                        break
-                    elif setkey.upper() == "API-KEY":
-                        self.options[key] = setvalue
-                        break
-                    else:
-                        print(f"[!] Unknown option: {key}")
-                        break
-                else :
+                    self.options[key] = setvalue
+                    return f"{self.options[key]}"
+                    break
+                else:
                     pass
             else :
-                print("Invalid Option!")
-            #print(f"[+] {key.upper()} set to {setvalue}")
-            #print(self.options)
+                return f"Invalid Option!"
 
         except Exception as e:
             print(e) 
