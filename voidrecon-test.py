@@ -1,3 +1,5 @@
+#!/bin/python3
+
 # voidrecon/voidrecon.py
 import textwrap
 import argparse

@@ -18,7 +18,8 @@ class Shell(cmd.Cmd):
 
     def do_use(self, arg):
         try:
-            self.recon.load_module(arg)
+            module_name = self.recon.load_module(arg)
+            print(f"[+] Module selected: {module_name}")
         except Exception as e:
             print(e)
 
@@ -28,16 +29,7 @@ class Shell(cmd.Cmd):
         if len(parts) != 2:
             print("[!] Usage: set <OPTIONS> <VALUE>")
             return
-        key, value = parts
-        if key.upper() == "TARGET":
-            self.target = value
-        elif key.upper() == "PORT":
-            self.port = value
-        else:
-            print(f"[!] Unknown option: {key}")
-            return
-        print(f"[+] {key.upper()} set to {value}")
-
+        self.recon.set_option(arg)
 
     def do_show(self, arg):
         try:
@@ -51,6 +43,7 @@ class Shell(cmd.Cmd):
 
     def do_run(self, arg):
         try:
+            print("[*] Running module...")
             self.recon.run_module()
         except Exception as e:
             print(e)
@@ -62,7 +55,8 @@ class Shell(cmd.Cmd):
 
     def do_search(self, arg):
         try:
-            self.recon.search_modules(arg)
+            module_path = self.recon.search_modules(arg)
+            print (f'[+] Module found: {short_path}' )
         except Exception as e:
             print(e)
 

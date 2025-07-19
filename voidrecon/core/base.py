@@ -67,11 +67,8 @@ class Recon():
                 pass
         if a == 1:
             #print (f'[+] Module found: {full_path}' )
-            print (f'[+] Module found: {short_path}' )
-        else: 
-            print(f'[!] Module not found: {keyword}')
-
-        return short_path
+            #print (f'[+] Module found: {short_path}' )
+            return short_path
 
 
     def load_module(self, arg):
@@ -80,7 +77,9 @@ class Recon():
             module_name = arg 
             full_path = f'voidrecon.modules.{module_name}'
             self.current_module = importlib.import_module(full_path)
-            print(f"[+] Module selected: {module_name}")
+            #print(f"[+] Module selected: {module_name}")
+
+            return module_name
         except ModuleNotFoundError as e:
             print(f"[!] Module not found: {module_name}")
             raise e
@@ -99,8 +98,30 @@ class Recon():
         # logic to show options
         return 0
 
-    def set_option(self, key, value):
-        self.options[key] = value
+    def set_option(self, arg):
+
+        option_template = getattr(self.current_module, 'option_template')
+        parts = arg.split()
+        setkey, setvalue = parts
+        try:
+            for key in option_template:
+                print(key, option_template[key])
+                if key == setkey :
+                    self.target = setvalue
+                    print(self.target)
+                    break
+        except Exception as e:
+            print(e) 
+
+#        if key.upper() == "TARGET":
+#            self.target = value
+#        elif key.upper() == "PORT":
+#            self.port = value
+#        else:
+#            print(f"[!] Unknown option: {key}")
+#            return
+#        print(f"[+] {key.upper()} set to {value}")
+#        self.options[key] = value
 
     def unset_options(self, key):
         # logic to unset options 
@@ -122,12 +143,12 @@ class Recon():
             'PORT': self.port
         }
         try: 
-            print("[*] Running module...")
+            #print("[*] Running module...")
             mod_class = getattr(self.current_module, 'Recon')
             instance = mod_class(options)
             instance.run()
         except Exception as e:
-            print(f"[!] Error while running module: {e}")
+            return e 
 
 
 

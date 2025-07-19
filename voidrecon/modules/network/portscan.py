@@ -2,6 +2,7 @@
 
 import socket
 
+
 info = {
     "name": "Port Scanner",
     "description": "Scans a range of TCP ports on the target",
@@ -11,6 +12,13 @@ info = {
         "PORT": "Comma-separated port list or single port (e.g., 22,80,443)"
     }
 }
+
+option_template = {
+    'TARGET': None,
+    'PORT': None,
+}
+    
+
 
 class Recon:
     def __init__(self, options):
