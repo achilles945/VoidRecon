@@ -38,12 +38,14 @@ VoidRecon/
 │   │
 │   ├── core/
 │   │   ├── __init__.py
-│   │   ├── framework.py             # CMD Shell
+│   │   ├── shell.py                 # CMD Shell
 │   │   ├── base.py                  # Main Logic
-│   │   ├── module.py                # Executes modules
+│   │   ├── banner.py                # Banner
+│   │   ├── web/
 │   │
 │   ├── modules/
 │   │   ├── __init__.py
+│   │   ├── module_list.txt
 │   │   ├── network/
 │   │   │   ├── __init__.py
 │   │   │   ├── portscan.py
@@ -93,8 +95,8 @@ VoidRecon/
 +-----------+---------------+                   +-----------+---------------+
             |                                                   |
      +------+-------+                                   +-------+-------+
-     | Module Loader|                                   |   Config Mgmt |
-     | (modrunner)  |                                   |   / Execution |
+     |    Module    |                                   |     Module    |
+     |   Execution  |                                   |    Execution  |
      +--------------+                                   +---------------+
 
 ```
@@ -108,6 +110,7 @@ VoidRecon/
 python3 voidrecon.py
 VoidRecon > use network/portscan
 VoidRecon > set TARGET 192.168.1.1
+VoidRecon > set PORT 80
 VoidRecon > run
 ```
 
