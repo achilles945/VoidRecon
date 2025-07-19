@@ -13,8 +13,14 @@ class Recon():
         super().__init__()
         self.options = {}
         self.current_module = None
-        self.target = 'google.com'
-        self.port = '80'
+#        self.target = None        # IP or domain 
+#        self.port = None          # Optional port or range
+#        self.url = None           # Full URL (https://example.com)
+#        self.wordlist = None      # Path to a wordlist
+#        self.email = None         # Target email address 
+#        self.username = None      # Target username
+#        self.file = None          # Path to file for metadata/hash
+#        self.apikey = None       # API key for services (Shodan, VirusTotal, etc.)
 
 
     #==================================================
@@ -105,23 +111,42 @@ class Recon():
         setkey, setvalue = parts
         try:
             for key in option_template:
-                print(key, option_template[key])
-                if key == setkey :
-                    self.target = setvalue
-                    print(self.target)
-                    break
+                if setkey == key :
+                    if setkey.upper() == "TARGET":
+                        self.options[key] = setvalue
+                        break
+                    elif setkey.upper() == "PORT":
+                        self.options[key] = setvalue
+                        break
+                    elif setkey.upper() == "URL":
+                        self.options[key] = setvalue
+                        break
+                    elif setkey.upper() == "WORDLIST":
+                        self.options[key] = setvalue
+                        break
+                    elif setkey.upper() == "EMAIL":
+                        self.options[key] = setvalue
+                        break
+                    elif setkey.upper() == "FILE":
+                        self.options[key] = setvalue
+                        break
+                    elif setkey.upper() == "API-KEY":
+                        self.options[key] = setvalue
+                        break
+                    else:
+                        print(f"[!] Unknown option: {key}")
+                        break
+                else :
+                    pass
+            else :
+                print("Invalid Option!")
+            #print(f"[+] {key.upper()} set to {setvalue}")
+            #print(self.options)
+
         except Exception as e:
             print(e) 
 
-#        if key.upper() == "TARGET":
-#            self.target = value
-#        elif key.upper() == "PORT":
-#            self.port = value
-#        else:
-#            print(f"[!] Unknown option: {key}")
-#            return
-#        print(f"[+] {key.upper()} set to {value}")
-#        self.options[key] = value
+
 
     def unset_options(self, key):
         # logic to unset options 
@@ -138,14 +163,10 @@ class Recon():
         if not self.current_module:
             print("[!] No Module selected. Use 'use' command first.")
             return
-        options = {
-            'TARGET': self.target,
-            'PORT': self.port
-        }
         try: 
             #print("[*] Running module...")
             mod_class = getattr(self.current_module, 'Recon')
-            instance = mod_class(options)
+            instance = mod_class(self.options)
             instance.run()
         except Exception as e:
             return e 

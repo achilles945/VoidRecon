@@ -16,6 +16,12 @@ info = {
 option_template = {
     'TARGET': None,
     'PORT': None,
+    #'URL' : None,
+    #'WORDLIST' : None
+    #'EMAIL' : None
+    #'USERNAME' : None
+    #'FILE' : None
+    #'API-KEY' : None
 }
     
 
