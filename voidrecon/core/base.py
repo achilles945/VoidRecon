@@ -14,14 +14,6 @@ class Recon():
         super().__init__()
         self.options = {}
         self.current_module = None
-#        self.target = None        # IP or domain 
-#        self.port = None          # Optional port or range
-#        self.url = None           # Full URL (https://example.com)
-#        self.wordlist = None      # Path to a wordlist
-#        self.email = None         # Target email address 
-#        self.username = None      # Target username
-#        self.file = None          # Path to file for metadata/hash
-#        self.apikey = None       # API key for services (Shodan, VirusTotal, etc.)
 
 
     #==================================================
@@ -31,18 +23,6 @@ class Recon():
 
     def help(self):
         # logic to show help page
-        return 0
-
-    def create_module(self):
-        # logic to create custom module by user
-        return 0
-
-    def custom_module_template(self):
-        # logic to show custom module template to user
-        return 0
-
-    def validate_module(self):
-        # logic to check whether module is valid
         return 0
 
 
@@ -90,6 +70,26 @@ class Recon():
         info_module = importlib.import_module(full_path)
         info = getattr(info_module, 'info')
         return info
+
+
+
+    def module_add(self, value):
+        # logic to create custom module by user
+        print(f"Module added {value}")
+
+
+    def module_check(self, value):
+        # logic to check whether module is valid
+        print(f"Module Checked {value}")
+    
+
+    def module_delete(self, value):
+        # logic to delete module
+        print(f"Module deleted {value}")
+
+    def module_template(self):
+        # logic to show custom module template to user
+        print(f"Module template ")
 
 
     #==================================================
