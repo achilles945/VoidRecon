@@ -28,10 +28,8 @@ class Shell(cmd.Cmd):
         print("[+] Exiting VoidRecon Shell...")
         exit()
 
-    
-    def do_help(self):
-        return 0
-
+    def do_help(self, arg):
+        help(Shell)
 
 
     #==================================================
@@ -49,9 +47,10 @@ class Shell(cmd.Cmd):
 
     def do_search(self, arg):
         try:
-            module_path = self.recon.search_modules(arg)
-            if module_path != False:
-                print (f'[+] Module found: {module_path}' )
+            search_list = self.recon.search_modules(arg)
+            if search_list :
+                for i in search_list:
+                    print (f'[+] Module found: {i}' )
             else:
                 print(f'[+] Module not found: {arg}')
         except Exception as e:
@@ -86,26 +85,29 @@ class Shell(cmd.Cmd):
             parts = arg.split()
             option, value = parts
         except Exception as e:
-            print(e)
+            parts = arg.split()
+            option, value1, value2 = parts
 
-        if len(parts) != 2:
-            print("[!] Usage: set <OPTIONS> <VALUE>")
+        if len(parts) != 2 | len(parts) != 3:
+            print("[!] Invalid command")
             return
 
         if option == 'ADD':
             try:
-                self.recon.module_add(value)
+                a = self.recon.module_add(value1, value2)
+                print(a) 
             except Exception as e:
                 print(f"[!] Path not found")
                 print(e) 
         elif option == 'DELETE':
             try:
-                self.recon.module_delete(value)
+                a = self.recon.module_delete(value)
+                print(a) 
             except Exception as e:
                 print(f"[!] Module not found")
                 print(e) 
 
-        elif option == 'CHECK':
+        elif option == 'TEST':
             try:
                 self.recon.module_check(value)
             except Exception as e:
@@ -156,6 +158,12 @@ class Shell(cmd.Cmd):
                     print(f"[!] No module selected")
             except Exception as e:
                 print(e)
+        elif arg == 'template':
+            try:
+                self.recon.module_template()
+                print("[+] module_template.py stored in home directory")
+            except Exception as e:
+                print(e) 
         else:
             print("[!] Invalid option")
 
@@ -171,7 +179,6 @@ class Shell(cmd.Cmd):
             self.recon.run_module()
         except Exception as e:
             print(f"[!] No module selected: {e}")
-
 
 
 

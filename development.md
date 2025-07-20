@@ -5,28 +5,34 @@ This file contains development strategies
 ## Logic of VoidRecon
     - voidrecon.py - entry point (loads shell interface or web interface)
     - base.py - core logic (can be used by both framework and web interface)
+        - System & Utility Functions
+            - exit()                           Done
+            - clear()                          Done 
+            - help()                           Not Done 
+            - print_banner()                   Done 
+            - version()
+            - check_dependencies()
+            - update_tool()        
         - module management
-            - list_modules()
-            - search_modules()
-            - load_module(path_to_module)
-            - reload_module()
+            - list_modules()                   Done
+            - search_modules()                 Done
+            - load_module(path_to_module)      Done  
+            - reload_module()                  
             - reload_all_modules()
             - unload_module()
-            - module_info()
-            - create_module()
-            - custom_module_template()
-            - validate_module()
+            - module_info()                    Done(NOT Formatted)
+            - add_module()                     Done
+            - module_template()                Done 
         - Option & Configuration Handling
-            - set_option(key, value)
-            - unset_option(key)
-            - show_options()
+            - set_option(key, value)           Done
+            - unset_option(key)                Done 
+            - show_options()                   Done(NOT Formatted)
         - Module Execution
-            - run_module()
-            - test_module()
-            - stop_module()
+            - run_module()                     Done                 
+            - stop_module() 
             - run_all()
         - Data Collection & Results
-            - show_results()
+            - show_results()   
             - clear_results()
             - export_results(format="json/csv/txt")
             - save_results(path)
@@ -47,15 +53,6 @@ This file contains development strategies
             - validate_api_key(service)
             - save_api_keys(path)
             - load_api_keys(path)
-        - System & Utility Functions
-            - start()
-            - exit()
-            - clear()
-            - help()
-            - print_banner()
-            - version()
-            - check_dependencies()
-            - update_tool()
         - Debugging & Development Tools
             - debug_module(name)
             - log_event(event)
@@ -63,6 +60,7 @@ This file contains development strategies
             - dev_mode()
         - multi-threading support
         - interactive graph view
+        
 
     - module.py - loads and runs module scripts
     - framework.py - shell interface

@@ -2,8 +2,10 @@
 
 # Core logic of VoidRecon
 
+import sys
 import os
 import importlib
+import shutil
 from voidrecon.core import shell
 import voidrecon.modules as modules
 import voidrecon.core.banner as banner
@@ -21,10 +23,6 @@ class Recon():
     #==================================================
 
 
-    def help(self):
-        # logic to show help page
-        return 0
-
 
     #==================================================
     # Module Management Methods
@@ -38,20 +36,26 @@ class Recon():
         with open(file_path, 'r') as f:
             for index, line in enumerate(f):
                 modlist.append(line)
+        f.close()
         return modlist
 
 
     def search_modules(self, keyword):
         # logic to search modules
+        search_list = []
+        a = 0
         file = "/voidrecon/modules/module_list.txt"
         file_path = os.getcwd() +file
         with open(file_path, 'r') as f:
             for index, line in enumerate(f):
                 if keyword in line:
-                    return line
-                    break
-            else:
-                return False
+                    search_list.append(line)
+                    a = 1
+        f.close()
+        if a == 1:
+            return search_list
+        else:
+            return False
 
 
     def load_module(self, arg):
@@ -67,29 +71,98 @@ class Recon():
         # logic to show modules information 
         module_name = arg 
         full_path = f'voidrecon.modules.{module_name}'
-        info_module = importlib.import_module(full_path)
-        info = getattr(info_module, 'info')
+        self.current_module = importlib.import_module(full_path)
+        info = getattr(self.current_module, 'info')
         return info
 
 
 
-    def module_add(self, value):
+    def module_add(self, current_path, mod_name):
         # logic to create custom module by user
-        print(f"Module added {value}")
+        final_path = os.getcwd() + f"/voidrecon/modules/custom/{mod_name}.py"
+        shutil.copyfile(current_path, final_path)
 
+        file = "/voidrecon/modules/module_list.txt"
+        file_path = os.getcwd() + file
+        with open(file_path, 'a') as f:
+            f.write(f"\ncustom.{mod_name}")
+        f.close()
 
-    def module_check(self, value):
-        # logic to check whether module is valid
-        print(f"Module Checked {value}")
+        file = "/voidrecon/modules/module_path_list.txt"
+        file_path = os.getcwd() + file
+        with open(file_path, 'a') as f:
+            f.write(f"\ncustom.{mod_name}:{final_path}")
+        f.close()
+
+        return f"Module added {mod_name}"
     
 
     def module_delete(self, value):
         # logic to delete module
-        print(f"Module deleted {value}")
+        module_name = value
+        mod_to_delete = None
+        modpath_path_list = None
+        modname_path_list = None
+        
+        file = "/voidrecon/modules/module_path_list.txt"
+        file_path = os.getcwd() + file
+        with open(file_path, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if not line or ':' not in line:
+                    continue
+                modname, modpath = line.split(":", 1)
+                modpath_path_list = modpath.strip()
+                modname_path_list = modname.strip()
+
+                if modname.strip() == module_name:
+                    mod_to_delete = modpath.strip()
+                    print(modpath.strip())
+                    break
+        f.close()
+
+        if mod_to_delete and os.path.isfile(mod_to_delete):
+            os.remove(mod_to_delete)
+
+
+            with open(file_path, 'r') as f:
+                lines = f.readlines()
+
+            with open(file_path, 'w') as f:
+                for line in lines:
+                    if line.strip() != f"{modname_path_list}:{modpath_path_list}":
+                        f.write(line)
+
+
+            file = "/voidrecon/modules/module_list.txt"
+            file_path = os.getcwd() + file
+
+            with open(file_path, 'r') as f:
+                lines = f.readlines()
+        
+            with open(file_path, 'w') as f:
+                for line in lines:
+                    if line.strip() != value:
+                        f.write(line)
+
+            return f"[INFO] Module '{module_name}' deleted: {mod_to_delete}"
+
+        else:
+            return f"[WARN] Module '{module_name}' not found or file does not exist."
+
+        
+
 
     def module_template(self):
         # logic to show custom module template to user
-        print(f"Module template ")
+        file = "/voidrecon/core/module_template.py"
+        module_template_path = os.getcwd() + file
+
+        dst_path = os.path.expanduser('~') + f"/module_template.py"
+
+        shutil.copyfile(module_template_path, dst_path)
+
+        
 
 
     #==================================================

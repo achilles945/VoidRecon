@@ -1,6 +1,2 @@
-network.ftp-anon                    # checks for ftp anonymoust login
-network.ping-sweep                  # performs ping sweep on ip
-webrecon.cms                        # perform cms
-webrecon.dir-bruteforce             # performs directory bruteforce 
-webrecon.http-headers               # looks for http-headers
-network.portscan                    # perform port scanning for ip
+network.portscan
+network.ftp-anon
