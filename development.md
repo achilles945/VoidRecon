@@ -7,36 +7,36 @@ This file contains development strategies
     - base.py - core logic (can be used by both framework and web interface)
         - System & Utility Functions
             - exit()                           Done
-            - clear()                          Done 
-            - help()                           Not Done 
+            - clear()                          Done | Linux , Windows
+            - help()                           Pending 
             - print_banner()                   Done 
             - version()
             - check_dependencies()
             - update_tool()        
         - module management
-            - list_modules()                   Done
-            - search_modules()                 Done
-            - load_module(path_to_module)      Done  
+            - list_modules()                   Done Linux , Windows
+            - search_modules()                 Done Linux , Windows
+            - load_module(path_to_module)      Done 
+            - module_info()                    Done | Formatting Pending
+            - module_add()                     Done Linux , Windows
+            - module_delete()                  Done Linux , Windows
+            - module_template()                Done Linux , Windows
             - reload_module()                  
             - reload_all_modules()
             - unload_module()
-            - module_info()                    Done(NOT Formatted)
-            - add_module()                     Done
-            - module_template()                Done 
         - Option & Configuration Handling
             - set_option(key, value)           Done
             - unset_option(key)                Done 
-            - show_options()                   Done(NOT Formatted)
+            - show_options()                   Done | Formatting Pending 
         - Module Execution
-            - run_module()                     Done                 
-            - stop_module() 
+            - run_module()                     Done                  
             - run_all()
         - Data Collection & Results
-            - show_results()   
-            - clear_results()
-            - export_results(format="json/csv/txt")
-            - save_results(path)
-            - load_results(path)
+            - show_results()                   Pending
+            - clear_results()                  Pending
+            - export_results(format="json/csv/txt")         pending
+            - save_result(path)                pending
+            - load_result(path)                pending
         - Workspace & Project Management
             - create_workspace(name)
             - switch_workspace(name)
@@ -66,70 +66,3 @@ This file contains development strategies
     - framework.py - shell interface
     - web - web interface (accessed through browser)
 
-
-## Current Status
-
-- **voidrecon.py**
-    - argparse
-
-- **voidrecon/core/banner.py**
-    - banner 
-
-- **base.py**
-    - nothing 
-
-- **voidreconcore/framework.py**
-    - cmd library
-        - do_use(): `use`
-        - do_set(): `set TARGET google.com`,`set PORT 80`
-        - do_show(): `show`
-        - do_run(): `run`, 
-            - creates 'options' (input api) & gives to module.run_module
-        - do_search(): `search <module>`
-        - do_exit(): `exit`
-        - do_clear(): `clear`
-- **voidrecon/core/module.py**
-    - load_module()
-    - run_module()
-
-
-## Ideas
-
-- **base.py** 
-    - core functions
-        - 
-
-
-
-
-
-- **framework.py**
-    - do_show() : `show modules, show options`
-    - module dependency check
-    - output : `TRUE or False` 
-    - add custom modules
-    - Running Module
-        - load modules
-        - parse options
-        - validate input
-        - call run() with prepared args
-
-- **module.py**
-    - load_module()
-        - Auto-scan available modules:
-            - Add a list_modules() function that traverses modules/ dir and returns names
-        - Module dependency checker
-            - Ensure required packages for module are installed 
-    - run_module()        
-        -  Pretty output formatting
-            - Clean table output for stdout
-            - Save to .json, .txt, or .csv in /output/
-        - Timestamped reports
-        - Logging support:
-            - Log results to a file using your utils/logger.py
-        - Standardize module interface
-            - Always look for .run(target) and info = {} in each module
-        - Error resilience:
-            - If a module crashes, handle and continue
-        - Chain scans:
-            - Run multiple modules on same target (like a scan profile)

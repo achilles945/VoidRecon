@@ -5,6 +5,7 @@
 import cmd
 import os
 import importlib
+from platform import system
 import voidrecon.core.base as base
 
 class Shell(cmd.Cmd):
@@ -21,7 +22,10 @@ class Shell(cmd.Cmd):
     #==================================================
 
     def do_clear(self, arg):
-        os.system('clear')
+        if system() == "Windows":
+            os.system('cls')
+        else:
+            os.system('clear')
 
 
     def do_exit(self, arg):

@@ -5,7 +5,8 @@
 import sys
 import os
 import importlib
-import shutil
+from shutil import copyfile
+from pathlib import Path
 from voidrecon.core import shell
 import voidrecon.modules as modules
 import voidrecon.core.banner as banner
@@ -16,6 +17,9 @@ class Recon():
         super().__init__()
         self.options = {}
         self.current_module = None
+        base_path = Path.cwd() / "voidrecon"
+        self.module_list_path = base_path / "modules" / "module_list.txt"
+        self.module_path_list_path = base_path / "modules" / "module_path_list.txt"
 
 
     #==================================================
@@ -31,12 +35,9 @@ class Recon():
     def list_modules(self):
         # logic to list modules
         modlist = []
-        file = "/voidrecon/modules/module_list.txt"
-        file_path = os.getcwd() +file
+        file_path = self.module_list_path
         with open(file_path, 'r') as f:
-            for index, line in enumerate(f):
-                modlist.append(line)
-        f.close()
+            modlist = [line.strip() for line in f]
         return modlist
 
 
@@ -44,18 +45,11 @@ class Recon():
         # logic to search modules
         search_list = []
         a = 0
-        file = "/voidrecon/modules/module_list.txt"
-        file_path = os.getcwd() +file
+        file_path = self.module_list_path
+        
         with open(file_path, 'r') as f:
-            for index, line in enumerate(f):
-                if keyword in line:
-                    search_list.append(line)
-                    a = 1
-        f.close()
-        if a == 1:
-            return search_list
-        else:
-            return False
+            search_list = [line.strip() for line in f if keyword in line]
+        return search_list
 
 
     def load_module(self, arg):
@@ -79,20 +73,19 @@ class Recon():
 
     def module_add(self, current_path, mod_name):
         # logic to create custom module by user
-        final_path = os.getcwd() + f"/voidrecon/modules/custom/{mod_name}.py"
-        shutil.copyfile(current_path, final_path)
 
-        file = "/voidrecon/modules/module_list.txt"
-        file_path = os.getcwd() + file
+        final_path = Path.cwd() / "voidrecon" / "modules" / "custom" / f"{mod_name}.py"
+        copyfile(current_path, final_path)
+
+        file_path = self.module_list_path
         with open(file_path, 'a') as f:
             f.write(f"\ncustom.{mod_name}")
-        f.close()
 
-        file = "/voidrecon/modules/module_path_list.txt"
-        file_path = os.getcwd() + file
+
+        file_path = self.module_path_list_path
         with open(file_path, 'a') as f:
             f.write(f"\ncustom.{mod_name}:{final_path}")
-        f.close()
+
 
         return f"Module added {mod_name}"
     
@@ -104,8 +97,8 @@ class Recon():
         modpath_path_list = None
         modname_path_list = None
         
-        file = "/voidrecon/modules/module_path_list.txt"
-        file_path = os.getcwd() + file
+
+        file_path = self.module_path_list_path
         with open(file_path, 'r') as f:
             for line in f:
                 line = line.strip()
@@ -119,9 +112,8 @@ class Recon():
                     mod_to_delete = modpath.strip()
                     print(modpath.strip())
                     break
-        f.close()
 
-        if mod_to_delete and os.path.isfile(mod_to_delete):
+        if mod_to_delete and mod_to_delete.is_file():
             os.remove(mod_to_delete)
 
 
@@ -134,8 +126,8 @@ class Recon():
                         f.write(line)
 
 
-            file = "/voidrecon/modules/module_list.txt"
-            file_path = os.getcwd() + file
+
+            file_path = self.module_list_path
 
             with open(file_path, 'r') as f:
                 lines = f.readlines()
@@ -155,12 +147,12 @@ class Recon():
 
     def module_template(self):
         # logic to show custom module template to user
-        file = "/voidrecon/core/module_template.py"
-        module_template_path = os.getcwd() + file
 
-        dst_path = os.path.expanduser('~') + f"/module_template.py"
+        module_template_path_full = Path.cwd() / "voidrecon" / "core" / "module_template.py"
+        
+        dst_path = Path.home() / "module_template.py"
 
-        shutil.copyfile(module_template_path, dst_path)
+        copyfile(module_template_path_full, dst_path)
 
         
 
