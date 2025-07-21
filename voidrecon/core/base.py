@@ -37,7 +37,7 @@ class Recon():
         modlist = []
         file_path = self.module_list_path
         with open(file_path, 'r') as f:
-            modlist = [line.strip() for line in f]
+            modlist = [line.strip() for line in f if line.strip()]
         return modlist
 
 
@@ -48,7 +48,7 @@ class Recon():
         file_path = self.module_list_path
         
         with open(file_path, 'r') as f:
-            search_list = [line.strip() for line in f if keyword in line]
+            search_list = [line.strip() for line in f if keyword in line ]
         return search_list
 
 
@@ -113,31 +113,32 @@ class Recon():
                     print(modpath.strip())
                     break
 
-        if mod_to_delete and mod_to_delete.is_file():
-            os.remove(mod_to_delete)
+        if mod_to_delete:
+            mod_path = Path(mod_to_delete)
+            if mod_path.is_file():
+                os.remove(mod_path)
+
+                with open(file_path, 'r') as f:
+                    lines = f.readlines()
+
+                with open(file_path, 'w') as f:
+                    for line in lines:
+                        if line.strip() != f"{modname_path_list}:{modpath_path_list}":
+                            f.write(line)
 
 
-            with open(file_path, 'r') as f:
-                lines = f.readlines()
 
-            with open(file_path, 'w') as f:
-                for line in lines:
-                    if line.strip() != f"{modname_path_list}:{modpath_path_list}":
-                        f.write(line)
+                file_path = self.module_list_path
 
+                with open(file_path, 'r') as f:
+                    lines = f.readlines()
+            
+                with open(file_path, 'w') as f:
+                    for line in lines:
+                        if line.strip() != value:
+                            f.write(line)
 
-
-            file_path = self.module_list_path
-
-            with open(file_path, 'r') as f:
-                lines = f.readlines()
-        
-            with open(file_path, 'w') as f:
-                for line in lines:
-                    if line.strip() != value:
-                        f.write(line)
-
-            return f"[INFO] Module '{module_name}' deleted: {mod_to_delete}"
+                return f"[INFO] Module deleted: {module_name}"
 
         else:
             return f"[WARN] Module '{module_name}' not found or file does not exist."
