@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask Button</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Click the Button</h1>
+    <button id="myButton">Click Me</button>
+    <p id="responseText"></p>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

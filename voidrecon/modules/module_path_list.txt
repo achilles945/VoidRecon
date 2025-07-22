@@ -1,3 +1,0 @@
-custom.newmod:/home/achilles/achilles945/VoidRecon/voidrecon/modules/custom/newmod.py
-
-custom.newmod2:/home/achilles/achilles945/VoidRecon/voidrecon/modules/custom/newmod2.py

@@ -41,11 +41,19 @@ VoidRecon/
 │   │   ├── shell.py                 # CMD Shell
 │   │   ├── base.py                  # Main Logic
 │   │   ├── banner.py                # Banner
-│   │   ├── web/
+│   │   └── web/
+|   |       ├── static/              # Frontend
+|   |       |   ├── style.css
+|   |       |   └── script.js
+|   |       ├── templates/           # HTML
+|   |       |   └── index.html
+|   |       └── app.py               # Backend
+|   |         
 │   │
 │   ├── modules/
 │   │   ├── __init__.py
 │   │   ├── module_list.txt
+│   │   ├── module_path_list.txt
 │   │   ├── network/
 │   │   │   ├── __init__.py
 │   │   │   ├── portscan.py

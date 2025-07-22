@@ -1,5 +1,2 @@
 network.portscan
 network.ftp-anon
-custom.newmod
-
-custom.newmod2
