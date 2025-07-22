@@ -8,7 +8,7 @@ This file contains development strategies
         - System & Utility Functions
             - exit()                           Done
             - clear()                          Done | Linux , Windows
-            - help()                           Pending 
+            - help()                           Done
             - print_banner()                   Done 
             - version()
             - check_dependencies()

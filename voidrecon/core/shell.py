@@ -33,7 +33,25 @@ class Shell(cmd.Cmd):
         exit()
 
     def do_help(self, arg):
-        help(Shell)
+        help_val = '''
+
+VoidRecon Commands:
+-----------------------------------------------------------------------------
+exit                                      Exits the framework
+help                                      Displays this menu
+search <module-name>                      Search a module 
+list                                      List all modules
+info <module-name>                        Information about module
+use <module-name>                         Select module to run
+run                                       Execute selected module
+show options                              Shows module options
+set <option> <value>                      Configure current module options
+unset <option>                            Unset the configured module options
+module ADD <script-path> <name>           Add custom module
+module DELETE <module-name>               Delete custom module  
+-----------------------------------------------------------------------------
+        '''
+        print(help_val)
 
 
     #==================================================
@@ -109,13 +127,6 @@ class Shell(cmd.Cmd):
                 print(a) 
             except Exception as e:
                 print(f"[!] Module not found")
-                print(e) 
-
-        elif option == 'TEST':
-            try:
-                self.recon.module_check(value)
-            except Exception as e:
-                print(f"[!] module not found")
                 print(e) 
         else:
             print("[!] Invalid option")
