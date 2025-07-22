@@ -7,10 +7,7 @@ info = {
     "name": "Port Scanner",
     "description": "Scans a range of TCP ports on the target",
     "author": "YourName",
-    "options": {
-        "TARGET": "Target IP or hostname",
-        "PORT": "Comma-separated port list or single port (e.g., 22,80,443)"
-    }
+    "options": "TARGET, PORT"
 }
 
 option_template = {

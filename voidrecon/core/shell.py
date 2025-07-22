@@ -92,8 +92,13 @@ module DELETE <module-name>               Delete custom module
         if arg :
             try :
                 info = self.recon.module_info(arg)
-                for key in info:
-                    print(f"{key} : {info[key]}")
+                print()
+                print(f"[+] Information related to module {arg}:")
+                print(" {:<15} {:<90}".format('-----------', '---------------------------------------------------------',))
+                for key, value in info.items():
+                    print(" {:<15} {:<90}".format(key or "None", value or "None"))
+                print(" {:<15} {:<90}".format('-----------', '---------------------------------------------------------',))
+                
             except Exception as e:
                 print(e)
         else:
@@ -167,8 +172,15 @@ module DELETE <module-name>               Delete custom module
             try:
                 option_template = self.recon.show_options()
                 if option_template != False:
-                    for key in option_template:
-                        print(f"{key} : {option_template[key]}")
+                    print()
+                    print(" {:<10} {:<15}".format('OPTION', 'CURRENT_VALUE',))
+                    print(" {:<10} {:<15}".format('------', '-------------',))
+                    for key, value in option_template.items():
+                        #print(f"{key} : {option_template[key]}")
+                        print(" {:<10} {:<15}".format(key, value or "None"))
+                    print(" {:<10} {:<15}".format('------', '-------------',))
+                    print()
+                    
                 else :
                     print(f"[!] No module selected")
             except Exception as e:

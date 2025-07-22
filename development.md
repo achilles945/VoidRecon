@@ -17,7 +17,7 @@ This file contains development strategies
             - list_modules()                   Done Linux , Windows
             - search_modules()                 Done Linux , Windows
             - load_module(path_to_module)      Done 
-            - module_info()                    Done | Formatting Pending
+            - module_info()                    Done
             - module_add()                     Done Linux , Windows
             - module_delete()                  Done Linux , Windows
             - module_template()                Done Linux , Windows
@@ -27,7 +27,7 @@ This file contains development strategies
         - Option & Configuration Handling
             - set_option(key, value)           Done
             - unset_option(key)                Done 
-            - show_options()                   Done | Formatting Pending 
+            - show_options()                   Done
         - Module Execution
             - run_module()                     Done                  
             - run_all()
