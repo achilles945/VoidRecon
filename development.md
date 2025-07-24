@@ -38,11 +38,11 @@ This file contains development strategies
             - save_result(path)                pending
             - load_result(path)                pending
         - Workspace & Project Management
-            - create_workspace(name)
-            - switch_workspace(name)
-            - list_workspaces()
-            - delete_workspace(name)
-            - rename_workspace(old, new)
+            - create_workspace(name)           Done
+            - switch_workspace(name)           In Progress          
+            - list_workspaces()                Done
+            - delete_workspace(name)           Done
+            - rename_workspace(old, new)       Done
             - backup_workspace(name)
             - import_workspace(path)
         - API Key Management 
@@ -60,9 +60,30 @@ This file contains development strategies
             - dev_mode()
         - multi-threading support
         - interactive graph view
-        
-
     - module.py - loads and runs module scripts
     - framework.py - shell interface
     - web - web interface (accessed through browser)
 
+
+## Database
+
+    # VoidRecon Database Tables
+
+    - companies — Stores company names and related organizational details.
+    - contacts — Contains personal information such as names, titles, and phone numbers.
+    - credentials — Holds usernames, passwords, or hashes collected during recon.
+    - domains — Lists domain names discovered as part of the target scope.
+    - emails — Contains email addresses found during information gathering.
+    - hosts — Stores hostnames and IP addresses related to targets.
+    - locations — Records physical or geographical location data.
+    - netblocks — IP address ranges (CIDR blocks) associated with targets.
+    - ports — Details open ports and associated services on hosts.
+    - profiles — Social media and user profile data (e.g., LinkedIn, GitHub).
+    - vulnerabilities — Information on vulnerabilities (CVEs or custom) linked to assets.
+    - websites — URLs of websites discovered within the reconnaissance.
+    - pages — Metadata about individual web pages such as titles and hashes.
+    - repositories — Public code repositories connected to profiles or domains.
+    - whois — WHOIS registration data for domains.
+    - modules — Logs and metadata about module executions.
+    - notes — Analyst notes or custom comments on targets.
+    - settings — Configuration and API keys for modules and workspaces.

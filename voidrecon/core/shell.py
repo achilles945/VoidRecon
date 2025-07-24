@@ -37,18 +37,21 @@ class Shell(cmd.Cmd):
 
 VoidRecon Commands:
 -----------------------------------------------------------------------------
-exit                                      Exits the framework
-help                                      Displays this menu
-search <module-name>                      Search a module 
-list                                      List all modules
-info <module-name>                        Information about module
-use <module-name>                         Select module to run
-run                                       Execute selected module
-show options                              Shows module options
-set <option> <value>                      Configure current module options
-unset <option>                            Unset the configured module options
-module ADD <script-path> <name>           Add custom module
-module DELETE <module-name>               Delete custom module  
+exit                                         Exits the framework
+help                                         Displays this menu
+search <module-name>                         Search a module 
+list <modules or workspace>                  List all modules/workspaces
+info <module-name>                           Information about module
+use <module-name>                            Select module to run
+run                                          Execute selected module
+show options                                 Shows module options
+set <option> <value>                         Configure current module options
+unset <option>                               Unset the configured module options
+module ADD <script-path> <name>              Add custom module
+module DELETE <module-name>                  Delete custom module  
+create workspace <workspace-name>            Create new workspace
+delete workspace <workspace-name>            Delete a workspace
+rename workspace <current-name> <new-name>   Change name of existing workspace
 -----------------------------------------------------------------------------
         '''
         print(help_val)
@@ -80,12 +83,22 @@ module DELETE <module-name>               Delete custom module
 
 
     def do_list(self,arg):
-        try :
-            modlist = self.recon.list_modules()
-            for mod in modlist:
-                print(mod)
-        except Exception as e:
-            print(f"[!] Error while setting: {e}")
+
+
+        if arg == "workspaces":
+            try :
+                out = self.recon.list_workspaces()
+                for work in out:
+                    print(work)
+            except Exception as e :
+                print(e)
+        elif arg == "modules":
+            try :
+                modlist = self.recon.list_modules()
+                for mod in modlist:
+                    print(mod)
+            except Exception as e:
+                print(f"[!] Error while setting: {e}")
     
 
     def do_info(self, arg):     # Info formatting to do
@@ -209,10 +222,50 @@ module DELETE <module-name>               Delete custom module
 
 
 
+    #==================================================
+    # Workspace & Project Management
+    #==================================================
 
+    def do_create(self, arg):
+        try:
+            parts = arg.split()
+            option, value = parts
+        except Exception as e:
+            print(e) 
+            return 
 
+        if option == "workspace":
+            try:
+                a = self.recon.create_workspace(value)
+                print(a)
+            except Exception as e:
+                print(e)
+                return
+    
+    def do_delete(self, arg):
 
+        parts = arg.split()
+        option, value = parts
+        if option == "workspace":
+            try:
+                output = self.recon.delete_workspace(value)
+                print(output)
+            except Exception as e:
+                print(e)
 
+    def do_rename(self, arg):
+        try:
+            parts = arg.split()
+            option, value1, value2 = parts
+        except Exception as e:
+            print(e)
+
+        if option == "workspace":
+            try:
+                output = self.recon.rename_workspace(value1, value2)
+                print(output)
+            except Exception as e:
+                print(e)
 
 
 
