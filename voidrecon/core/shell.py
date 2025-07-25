@@ -8,13 +8,26 @@ import importlib
 from platform import system
 import voidrecon.core.base as base
 
-class Shell(cmd.Cmd):
-    prompt = "# VoidRecon > "
 
+class Shell(cmd.Cmd):
+
+    prompt = "# VoidRecon >"
 
     def __init__(self):
         super().__init__()
         self.recon = base.Recon()
+        self.current_workspace = None
+        self.update_prompt()
+        
+
+    def update_prompt(self):
+        self.recon.start()
+        self.current_workspace = self.recon.workspace
+        if self.current_workspace:
+            self.prompt = f"[VoidRecon: {self.current_workspace}] > "
+        else:
+            self.prompt = f"[VoidRecon: No Workspace] > "
+        
 
 
     #==================================================
@@ -52,6 +65,7 @@ module DELETE <module-name>                  Delete custom module
 create workspace <workspace-name>            Create new workspace
 delete workspace <workspace-name>            Delete a workspace
 rename workspace <current-name> <new-name>   Change name of existing workspace
+switch workspace <workspace name>            Change the workspace
 -----------------------------------------------------------------------------
         '''
         print(help_val)
@@ -267,6 +281,20 @@ rename workspace <current-name> <new-name>   Change name of existing workspace
             except Exception as e:
                 print(e)
 
+    def do_switch(self, arg):
+        parts = arg.split()
+        option, value = parts
+        if option == "workspace":
+            try:
+                a = self.recon.switch_workspace(value)
+                self.update_prompt()
+                print(a)
+
+            except Exception as e:
+                print(e)
+                
+
+            
 
 
 

@@ -37,9 +37,20 @@ This file contains development strategies
             - export_results(format="json/csv/txt")         pending
             - save_result(path)                pending
             - load_result(path)                pending
+        - Database Mnagement
+            - create_data_db()                 Done
+            - create_tasks_db()                Done
+            - activate_db()                    Done
+            - insert_into_table()
+            - update_table()
+            - delete_from_table()
+            - select_from_table()
+            - table_exists()
+            - log_tasks()
+            - get_tasks()
         - Workspace & Project Management
             - create_workspace(name)           Done
-            - switch_workspace(name)           In Progress          
+            - switch_workspace(name)           Done         
             - list_workspaces()                Done
             - delete_workspace(name)           Done
             - rename_workspace(old, new)       Done

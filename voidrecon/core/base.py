@@ -23,8 +23,13 @@ class Recon():
         base_path = Path.cwd() / "voidrecon"
         self.module_list_path = base_path / "modules" / "module_list.txt"
         self.module_path_list_path = base_path / "modules" / "module_path_list.txt"
-        self.workspace = "default" 
+        self.workspace = None
 
+        # database management
+        self.data_con = None
+        self.data_cur = None
+        self.tasks_con = None
+        self.tasks_cur = None
 
     #==================================================
     # System & Utility Functions
@@ -219,6 +224,46 @@ class Recon():
 
 
 
+
+    #==================================================
+    # Database Management
+    #==================================================
+
+    def activate_db(self, data_file_path, tasks_file_path):
+        try:
+            self.data_con = sqlite3.connect(data_file_path)
+            self.data_cur = self.data_con.cursor()
+            self.tasks_con = sqlite3.connect(tasks_file_path)
+            self.tasks_cur = self.tasks_con.cursor()
+        except Exception as e:
+            print(f"Failed to activate the databases: {e}")
+
+
+    def create_tasks_db(self):
+        self.tasks_cur.execute('CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT,module TEXT,arguments TEXT,status TEXT,start_time TEXT,end_time TEXT,result TEXT,notes TEXT);')
+        self.tasks_con.commit()
+
+    def create_data_db(self):
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS domains (domain TEXT, notes TEXT, module TEXT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS companies (company TEXT, description TEXT, notes TEXT, module TEXT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS netblocks (netblock TEXT, notes TEXT, module TEXT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS locations (latitude TEXT, longitude TEXT, street_address TEXT, notes TEXT, module TEXT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS vulnerabilities (host TEXT, reference TEXT, example TEXT, publish_date TEXT, category TEXT, status TEXT, notes TEXT, module TEXT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS ports (ip_address TEXT, host TEXT, port TEXT, protocol TEXT, banner TEXT, notes TEXT, module TEXT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS hosts (host TEXT, ip_address TEXT, region TEXT, country TEXT, latitude TEXT, longitude TEXT, notes TEXT, module TEXT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS contacts (first_name TEXT, middle_name TEXT, last_name TEXT, email TEXT, title TEXT, region TEXT, country TEXT, phone TEXT, notes TEXT, module TEXT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS credentials (username TEXT, password TEXT, hash TEXT, type TEXT, leak TEXT, notes TEXT, module TEXT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS leaks (leak_id TEXT, description TEXT, source_refs TEXT, leak_type TEXT, title TEXT, import_date TEXT, leak_date TEXT, attackers TEXT, num_entries TEXT, score TEXT, num_domains_affected TEXT, attack_method TEXT, target_industries TEXT, password_hash TEXT, password_type TEXT, targets TEXT, media_refs TEXT, notes TEXT, module TEXT)')
+        #self.data_cur.execute('CREATE TABLE IF NOT EXISTS pushpins (source TEXT, screen_name TEXT, profile_name TEXT, profile_url TEXT, media_url TEXT, thumb_url TEXT, message TEXT, latitude TEXT, longitude TEXT, time TEXT, notes TEXT, module TEXT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS profiles (username TEXT, resource TEXT, url TEXT, category TEXT, notes TEXT, module TEXT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS repositories (name TEXT, owner TEXT, description TEXT, resource TEXT, category TEXT, url TEXT, notes TEXT, module TEXT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS dashboard (module TEXT PRIMARY KEY, runs INT)')
+        self.data_cur.execute('PRAGMA user_version = 10')
+        self.data_con.commit()
+
+
+
+
     
     #==================================================
     # Workspace & Project Management
@@ -229,27 +274,33 @@ class Recon():
         workspace_path = Path.home() / ".voidrecon" / "workspaces" / f"{workspace_name}"
         data_file_path = workspace_path / "data.db"
         tasks_file_path = workspace_path / "tasks.db"
+        a = 0
         try:
             os.makedirs(workspace_path, exist_ok=False)
+            self.activate_db(data_file_path, tasks_file_path)
+            self.create_data_db()
+            self.create_tasks_db() 
+            self.data_con.close()
+            self.tasks_con.close()         
             return f"[+] Workspace {workspace_name} created successfully"
         except:
             return f"[!] Workspace {workspace_name} already exists"
 
-        try:
-            conn = sqlite3.connect(data_file_path)
-            conn2 = sqlite3.connect(tasks_file_path)
-            print("Database Sqlite3.db formed.")
-        except:
-            print("Database Sqlite3.db not formed.")
 
-        conn.close()
-        conn2.close()
 
     def switch_workspace(self, workspace_name):
+        
+        workspace_path = Path.home() / ".voidrecon" / "workspaces" / f"{workspace_name}"
+        data_file_path = workspace_path / "data.db"
+        tasks_file_path = workspace_path / "tasks.db"
+        
+        if not workspace_path.exists():
+            return f"[!] No workspace {workspace_name} found"
         try:
             self.workspace = workspace_name
-            activate_db(workspace_name)
-            return f"[+] Workspace changed successfully"
+            self.activate_db(data_file_path, tasks_file_path)
+            self.workspace = workspace_name
+            return f"[+] Workspace changed to {self.workspace} successfully"
         except Exception as e:
             return f"[!] Cannot switch workspace: {e}"
         
@@ -263,7 +314,7 @@ class Recon():
         
         workspace_list = []
         workspace_list = os.listdir(workspace_dir)
-        return workspace_list
+        return sorted(workspace_list)
 
 
 
@@ -271,7 +322,7 @@ class Recon():
         workspace_path = Path.home() / ".voidrecon" / "workspaces" / workspace_name
         
         if not workspace_path.exists():
-            return "[!] No workspace directory found"
+            return f"[!] No workspace {workspace_name} found"
 
         try:
             rmtree(workspace_path)
@@ -282,6 +333,10 @@ class Recon():
     def rename_workspace(self, current_name, new_name):
         current_workspace_path = Path.home() / ".voidrecon" / "workspaces" / current_name
         new_workspace_path = Path.home() / ".voidrecon" / "workspaces" / new_name
+
+        if new_workspace_path.exists():
+            return f"[!] A workspace named {new_name} already exists"
+
         if not current_workspace_path.exists():
             return "[!] No workspace directory found"
 
@@ -292,35 +347,27 @@ class Recon():
             return f"[!] Cannot change workspace name: {e}"
 
 
-
     #==================================================
-    # Database Management
+    # Startup Function
     #==================================================
 
-    def activate_db(self, workspace_name):
-         pass
+    def start(self):
+        self.workspace = "default"
+        workspace_path = Path.home() / ".voidrecon" / "workspaces" / f"{self.workspace}"
+
+        try:
+            if not workspace_path.exists():
+                result = self.create_workspace(self.workspace)
+                self.switch_workspace(self.workspace)
+        except Exception as e:
+            print(f"[!] Failed to initialize workspace: {e}")
 
 
-    def _create_db(self):
-            self.query('CREATE TABLE IF NOT EXISTS domains (domain TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS companies (company TEXT, description TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS netblocks (netblock TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS locations (latitude TEXT, longitude TEXT, street_address TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS vulnerabilities (host TEXT, reference TEXT, example TEXT, publish_date TEXT, category TEXT, status TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS ports (ip_address TEXT, host TEXT, port TEXT, protocol TEXT, banner TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS hosts (host TEXT, ip_address TEXT, region TEXT, country TEXT, latitude TEXT, longitude TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS contacts (first_name TEXT, middle_name TEXT, last_name TEXT, email TEXT, title TEXT, region TEXT, country TEXT, phone TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS credentials (username TEXT, password TEXT, hash TEXT, type TEXT, leak TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS leaks (leak_id TEXT, description TEXT, source_refs TEXT, leak_type TEXT, title TEXT, import_date TEXT, leak_date TEXT, attackers TEXT, num_entries TEXT, score TEXT, num_domains_affected TEXT, attack_method TEXT, target_industries TEXT, password_hash TEXT, password_type TEXT, targets TEXT, media_refs TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS pushpins (source TEXT, screen_name TEXT, profile_name TEXT, profile_url TEXT, media_url TEXT, thumb_url TEXT, message TEXT, latitude TEXT, longitude TEXT, time TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS profiles (username TEXT, resource TEXT, url TEXT, category TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS repositories (name TEXT, owner TEXT, description TEXT, resource TEXT, category TEXT, url TEXT, notes TEXT, module TEXT)')
-            self.query('CREATE TABLE IF NOT EXISTS dashboard (module TEXT PRIMARY KEY, runs INT)')
-            self.query('PRAGMA user_version = 10')
+        
 
 
 
-
+        
 
 
 
