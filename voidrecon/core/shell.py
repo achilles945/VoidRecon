@@ -17,11 +17,16 @@ class Shell(cmd.Cmd):
         super().__init__()
         self.recon = base.Recon()
         self.current_workspace = None
+        self.begin()
         self.update_prompt()
+
         
+    def begin(self):
+        self.recon.start()
+
+
 
     def update_prompt(self):
-        self.recon.start()
         self.current_workspace = self.recon.workspace
         if self.current_workspace:
             self.prompt = f"[VoidRecon: {self.current_workspace}] > "
@@ -294,7 +299,12 @@ switch workspace <workspace name>            Change the workspace
                 print(e)
                 
 
-            
+    def do_tasks(self, arg):
+        try:
+            self.recon.get_tasks()
+        except Exception as e:
+            print(e)
+            return
 
 
 

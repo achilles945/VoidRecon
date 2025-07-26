@@ -8,6 +8,7 @@ import importlib
 import sqlite3
 from shutil import rmtree
 from shutil import copyfile
+import datetime
 
 from pathlib import Path
 from voidrecon.core import shell
@@ -207,27 +208,10 @@ class Recon():
 
 
     #==================================================
-    # Module Execution Methods
-    #==================================================
-
-
-    def run_module(self):
-        # logic to run the selected module with options
-        try:
-            mod_class = getattr(self.current_module, 'Recon')
-            instance = mod_class(self.options)
-            instance.run()
-            return True
-        except KeyboardInterrupt:
-            print("Interrupted!...")
-            return
-
-
-
-
-    #==================================================
     # Database Management
     #==================================================
+
+
 
     def activate_db(self, data_file_path, tasks_file_path):
         try:
@@ -240,7 +224,7 @@ class Recon():
 
 
     def create_tasks_db(self):
-        self.tasks_cur.execute('CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT,module TEXT,arguments TEXT,status TEXT,start_time TEXT,end_time TEXT,result TEXT,notes TEXT);')
+        self.tasks_cur.execute('CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT,module TEXT,arguments TEXT,status TEXT,start_time TEXT,end_time TEXT);')
         self.tasks_con.commit()
 
     def create_data_db(self):
@@ -254,7 +238,7 @@ class Recon():
         self.data_cur.execute('CREATE TABLE IF NOT EXISTS contacts (first_name TEXT, middle_name TEXT, last_name TEXT, email TEXT, title TEXT, region TEXT, country TEXT, phone TEXT, notes TEXT, module TEXT)')
         self.data_cur.execute('CREATE TABLE IF NOT EXISTS credentials (username TEXT, password TEXT, hash TEXT, type TEXT, leak TEXT, notes TEXT, module TEXT)')
         self.data_cur.execute('CREATE TABLE IF NOT EXISTS leaks (leak_id TEXT, description TEXT, source_refs TEXT, leak_type TEXT, title TEXT, import_date TEXT, leak_date TEXT, attackers TEXT, num_entries TEXT, score TEXT, num_domains_affected TEXT, attack_method TEXT, target_industries TEXT, password_hash TEXT, password_type TEXT, targets TEXT, media_refs TEXT, notes TEXT, module TEXT)')
-        #self.data_cur.execute('CREATE TABLE IF NOT EXISTS pushpins (source TEXT, screen_name TEXT, profile_name TEXT, profile_url TEXT, media_url TEXT, thumb_url TEXT, message TEXT, latitude TEXT, longitude TEXT, time TEXT, notes TEXT, module TEXT)')
+        #self.data_con.execute('CREATE TABLE IF NOT EXISTS pushpins (source TEXT, screen_name TEXT, profile_name TEXT, profile_url TEXT, media_url TEXT, thumb_url TEXT, message TEXT, latitude TEXT, longitude TEXT, time TEXT, notes TEXT, module TEXT)')
         self.data_cur.execute('CREATE TABLE IF NOT EXISTS profiles (username TEXT, resource TEXT, url TEXT, category TEXT, notes TEXT, module TEXT)')
         self.data_cur.execute('CREATE TABLE IF NOT EXISTS repositories (name TEXT, owner TEXT, description TEXT, resource TEXT, category TEXT, url TEXT, notes TEXT, module TEXT)')
         self.data_cur.execute('CREATE TABLE IF NOT EXISTS dashboard (module TEXT PRIMARY KEY, runs INT)')
@@ -262,6 +246,63 @@ class Recon():
         self.data_con.commit()
 
 
+
+    def insert_into_table(self, table_name: str, data: dict ):
+        try:
+            columns = ', '.join(data.keys())
+            placeholders = ', '.join(['?'] * len(data))
+            values = tuple(data.values())
+            query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+            self.data_cur.execute(query, values)
+            self.data_con.commit()
+            #print("[+].data_con.execute executed successfully.")
+            
+        except Exception as e:
+            print(f"[!] Failed to insert into table {table_name}: {e}")  
+
+
+
+    def get_data(self, table_name): 
+        try:
+            query = f"SELECT * FROM {table_name}"
+            self.data_cur.execute(query)
+            rows = self.data_cur.fetchall()
+            return rows
+        except Exception as e:
+            print(f"[!] Failed to select from table {table_name}: {e}")
+
+
+    def log_tasks(self, data: dict):
+        try:
+            columns = ', '.join(data.keys())
+            placeholders = ', '.join(['?'] * len(data))
+            values = tuple(data.values())
+            query = f"INSERT INTO tasks ({columns}) VALUES ({placeholders})"
+            self.tasks_cur.execute(query, values)
+            self.tasks_con.commit()
+            #print("[+].data_con.execute executed successfully.")
+            
+        except Exception as e:
+            print(f"[!] Failed to insert into table tasks: {e}") 
+
+
+
+    def get_tasks(self):
+        try:
+            query = f"SELECT * FROM tasks"
+            self.tasks_cur.execute(query)
+            rows = self.tasks_cur.fetchall()
+            print(rows)
+        except Exception as e:
+            print(f"[!] Failed to select from table tasks: {e}")
+
+
+
+#    def update_table(self):
+
+
+
+#    def delete_from_table(self):
 
 
     
@@ -283,8 +324,9 @@ class Recon():
             self.data_con.close()
             self.tasks_con.close()         
             return f"[+] Workspace {workspace_name} created successfully"
-        except:
-            return f"[!] Workspace {workspace_name} already exists"
+        except Exception as e:
+            #return f"[!] Workspace {workspace_name} already exists: {e}"
+            return e 
 
 
 
@@ -364,6 +406,43 @@ class Recon():
 
 
         
+
+    #==================================================
+    # Module Execution Methods
+    #==================================================
+
+
+    def run_module(self):
+        # logic to run the selected module with options
+
+        module = self.current_module
+        args = self.options
+        status = "completed"
+        start_time = datetime.datetime.now()
+        end_time = datetime.datetime.now()
+
+        data = {
+            "module": str(module),
+            "arguments": str(args),
+            "status": status,
+            "start_time": str(start_time),
+            "end_time": str(end_time)
+        }     
+
+        try:
+            mod_class = getattr(self.current_module, 'Recon')
+            instance = mod_class(self.options)
+            instance.run()
+            data["end_time"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.log_tasks(data)
+            return True
+        except KeyboardInterrupt:
+                print("[!] Interrupted by user.")
+                data["status"] = "interrupted"
+                data["end_time"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                self.log_tasks(data)
+                return False
+
 
 
 

@@ -42,12 +42,11 @@ This file contains development strategies
             - create_tasks_db()                Done
             - activate_db()                    Done
             - insert_into_table()
-            - update_table()
-            - delete_from_table()
             - select_from_table()
-            - table_exists()
             - log_tasks()
             - get_tasks()
+            - update_table()
+            - delete_from_table()
         - Workspace & Project Management
             - create_workspace(name)           Done
             - switch_workspace(name)           Done         
@@ -74,6 +73,38 @@ This file contains development strategies
     - module.py - loads and runs module scripts
     - framework.py - shell interface
     - web - web interface (accessed through browser)
+
+
+```
+self.recon.insert_into_table("domains", {
+    "domain": "example.com",
+    "notes": "Found via Google dork",
+    "module": "google_dork"
+})
+
+```
+
+```
+module = "dns_resolver"
+args = {"domain": "example.com"}
+status = "completed"
+start_time = "2025-07-24 18:00:00"
+end_time = "2025-07-24 18:00:05"
+result = "Resolved 3 A records"
+notes = "Ran with default settings"
+
+self.log_tasks("tasks", {
+    "module": module,
+    "arguments": str(args),  # Serialize dict to string
+    "status": status,
+    "start_time": start_time,
+    "end_time": end_time,
+    "result": result,
+    "notes": notes
+}) 
+
+```
+
 
 
 ## Database
