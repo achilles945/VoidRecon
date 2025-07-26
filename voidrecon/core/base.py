@@ -21,6 +21,7 @@ class Recon():
         super().__init__()
         self.options = {}
         self.current_module = None
+        self.module_name = None
         base_path = Path.cwd() / "voidrecon"
         self.module_list_path = base_path / "modules" / "module_list.txt"
         self.module_path_list_path = base_path / "modules" / "module_path_list.txt"
@@ -31,6 +32,7 @@ class Recon():
         self.data_cur = None
         self.tasks_con = None
         self.tasks_cur = None
+
 
     #==================================================
     # System & Utility Functions
@@ -64,12 +66,12 @@ class Recon():
 
     def load_module(self, arg):
         # logic to load module
-        module_name = arg 
-        full_path = f'voidrecon.modules.{module_name}'
+        self.module_name = arg 
+        full_path = f'voidrecon.modules.{self.module_name}'
         self.current_module = importlib.import_module(full_path)
         self.options = getattr(self.current_module, 'option_template')
 
-        return module_name
+        return self.module_name
 
     def module_info(self, arg):
         # logic to show modules information 
@@ -292,7 +294,7 @@ class Recon():
             query = f"SELECT * FROM tasks"
             self.tasks_cur.execute(query)
             rows = self.tasks_cur.fetchall()
-            print(rows)
+            return rows
         except Exception as e:
             print(f"[!] Failed to select from table tasks: {e}")
 
@@ -394,13 +396,14 @@ class Recon():
     #==================================================
 
     def start(self):
-        self.workspace = "default"
-        workspace_path = Path.home() / ".voidrecon" / "workspaces" / f"{self.workspace}"
+        workspace = "default"
+        self.workspace = workspace
+        workspace_path = Path.home() / ".voidrecon" / "workspaces" / f"{workspace}"
 
         try:
             if not workspace_path.exists():
-                result = self.create_workspace(self.workspace)
-                self.switch_workspace(self.workspace)
+                self.create_workspace(workspace)
+            self.switch_workspace(workspace)
         except Exception as e:
             print(f"[!] Failed to initialize workspace: {e}")
 
@@ -415,7 +418,7 @@ class Recon():
     def run_module(self):
         # logic to run the selected module with options
 
-        module = self.current_module
+        module = self.module_name
         args = self.options
         status = "completed"
         start_time = datetime.datetime.now()
@@ -433,7 +436,7 @@ class Recon():
             mod_class = getattr(self.current_module, 'Recon')
             instance = mod_class(self.options)
             instance.run()
-            data["end_time"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            data["end_time"] = datetime.datetime.now()
             self.log_tasks(data)
             return True
         except KeyboardInterrupt:

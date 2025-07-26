@@ -299,9 +299,15 @@ switch workspace <workspace name>            Change the workspace
                 print(e)
                 
 
+
     def do_tasks(self, arg):
+
         try:
-            self.recon.get_tasks()
+            rows = self.recon.get_tasks()
+            for row in rows:
+                for i in row:
+                    print(i)
+
         except Exception as e:
             print(e)
             return
