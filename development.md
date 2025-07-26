@@ -31,20 +31,14 @@ This file contains development strategies
         - Module Execution
             - run_module()                     Done                  
             - run_all()
-        - Data Collection & Results
-            - show_results()                   Pending
-            - clear_results()                  Pending
-            - export_results(format="json/csv/txt")         pending
-            - save_result(path)                pending
-            - load_result(path)                pending
-        - Database Mnagement
+        - Database Mnagement 
             - create_data_db()                 Done
             - create_tasks_db()                Done
             - activate_db()                    Done
-            - insert_into_table()
-            - select_from_table()
-            - log_tasks()
-            - get_tasks()
+            - insert_into_table()              Done
+            - get_data()                       Done
+            - log_tasks()                      Done
+            - get_tasks()                      Done
             - update_table()
             - delete_from_table()
         - Workspace & Project Management
@@ -55,6 +49,10 @@ This file contains development strategies
             - rename_workspace(old, new)       Done
             - backup_workspace(name)
             - import_workspace(path)
+        - Data Collection & Results
+            - show_results()                   Pending
+            - clear_results()                  Pending
+            - export_results(format="json/csv/txt")         pending
         - API Key Management 
             - For modules that rely on external APIs (Shodan, VirusTotal, etc.)
             - add_api_key(service, key)
@@ -129,3 +127,4 @@ self.log_tasks("tasks", {
     - modules — Logs and metadata about module executions.
     - notes — Analyst notes or custom comments on targets.
     - settings — Configuration and API keys for modules and workspaces.
+

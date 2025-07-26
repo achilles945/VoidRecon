@@ -63,10 +63,11 @@ info <module-name>                           Information about module
 use <module-name>                            Select module to run
 run                                          Execute selected module
 show options                                 Shows module options
+show template                                Show module template to create custom module
 set <option> <value>                         Configure current module options
-unset <option>                               Unset the configured module options
-module ADD <script-path> <name>              Add custom module
-module DELETE <module-name>                  Delete custom module  
+unset <option>                               Unset the configured module options 
+create module <file-path> <module-name>      Create a custom module
+delete module <module-name>                  Delete custom module
 create workspace <workspace-name>            Create new workspace
 delete workspace <workspace-name>            Delete a workspace
 rename workspace <current-name> <new-name>   Change name of existing workspace
@@ -100,24 +101,6 @@ switch workspace <workspace name>            Change the workspace
         except Exception as e:
             print(f"Error while searching module: {e}")
 
-
-    def do_list(self,arg):
-
-
-        if arg == "workspaces":
-            try :
-                out = self.recon.list_workspaces()
-                for work in out:
-                    print(work)
-            except Exception as e :
-                print(e)
-        elif arg == "modules":
-            try :
-                modlist = self.recon.list_modules()
-                for mod in modlist:
-                    print(mod)
-            except Exception as e:
-                print(f"[!] Error while setting: {e}")
     
 
     def do_info(self, arg):     # Info formatting to do
@@ -137,37 +120,19 @@ switch workspace <workspace name>            Change the workspace
             print("[!] Usage: set <MODULE_NAME>")            
 
 
+    #==================================================
+    # Module Execution Methods
+    #==================================================
 
-    def do_module(self, arg):
-        # ADD, DELETE, CHECK
+
+    def do_run(self, arg):
         try:
-            parts = arg.split()
-            option, value = parts
+            print("[*] Running module...")
+            self.recon.run_module()
         except Exception as e:
-            parts = arg.split()
-            option, value1, value2 = parts
+            print(f"[!] No module selected: {e}")
 
-        if len(parts) != 2 | len(parts) != 3:
-            print("[!] Invalid command")
-            return
 
-        if option == 'ADD':
-            try:
-                a = self.recon.module_add(value1, value2)
-                print(a) 
-            except Exception as e:
-                print(f"[!] Path not found")
-                print(e) 
-        elif option == 'DELETE':
-            try:
-                a = self.recon.module_delete(value)
-                print(a) 
-            except Exception as e:
-                print(f"[!] Module not found")
-                print(e) 
-        else:
-            print("[!] Invalid option")
-        return 0
 
 
     
@@ -227,31 +192,39 @@ switch workspace <workspace name>            Change the workspace
             print("[!] Invalid option")
 
 
-    #==================================================
-    # Module Execution Methods
-    #==================================================
-
-
-    def do_run(self, arg):
-        try:
-            print("[*] Running module...")
-            self.recon.run_module()
-        except Exception as e:
-            print(f"[!] No module selected: {e}")
-
-
 
     #==================================================
-    # Workspace & Project Management
+    # Workspace & Project Management / Module Management
     #==================================================
+
+
+
+    def do_list(self,arg):
+
+
+        if arg == "workspaces":
+            try :
+                out = self.recon.list_workspaces()
+                for work in out:
+                    print(work)
+            except Exception as e :
+                print(e)
+        elif arg == "modules":
+            try :
+                modlist = self.recon.list_modules()
+                for mod in modlist:
+                    print(mod)
+            except Exception as e:
+                print(f"[!] Error while setting: {e}")
+
 
     def do_create(self, arg):
         try:
             parts = arg.split()
             option, value = parts
         except Exception as e:
-            print(e) 
-            return 
+            parts = arg.split()
+            option, value1, value2 = parts
 
         if option == "workspace":
             try:
@@ -260,17 +233,40 @@ switch workspace <workspace name>            Change the workspace
             except Exception as e:
                 print(e)
                 return
+        elif option == "module":
+            try:
+                a = self.recon.module_add(value1, value2)
+                print(a) 
+            except Exception as e:
+                print(f"[!] Path not found")
+                print(e)
+        else :
+            print("[!] Invalid option")
+
     
     def do_delete(self, arg):
+        try:
+            parts = arg.split()
+            option, value = parts
+        except:
+            print(f"[!] Invalid option")
 
-        parts = arg.split()
-        option, value = parts
         if option == "workspace":
             try:
                 output = self.recon.delete_workspace(value)
                 print(output)
             except Exception as e:
                 print(e)
+
+        elif option == 'module':
+            try:
+                a = self.recon.module_delete(value)
+                print(a) 
+            except Exception as e:
+                print(f"[!] Module not found")
+                print(e) 
+        else:
+            print("[!] Invalid option")
 
     def do_rename(self, arg):
         try:
