@@ -11,14 +11,14 @@
   Outputs: records list, timestamps.  
   Deps: APIs (VirusTotal, SecurityTrails), dnspython.  
 
-- Whois lookup + parsing  
+- Whois lookup + parsing  : DONE
   Purpose: Domain registration/registrant, creation/expiry, name servers.  
   Inputs: domain, IP.  
   Options: raw/whois-parsed, redact GDPR fields.  
   Outputs: structured contact fields, raw WHOIS.  
   Deps: python-whois, RDAP clients.  
 
-- Subdomain enumeration (passive only)  
+- Subdomain enumeration (passive only)      
   Purpose: Find subdomains from passive sources.  
   Inputs: domain.  
   Options: passive-only.  
@@ -253,6 +253,199 @@
   Purpose: Flag actions that may violate TOS, local law, or privacy concerns (e.g., active exploitation, scraping sensitive data).  
   Inputs: planned actions, region.  
   Outputs: warnings, recommended mitigations.  
+
+
+```
+
+
+## Python OSINT Library list
+```
+
+* Threat Intelligence / Malware & File Analysis Libraries
+
+  * virustotal-python – Query VirusTotal for files, hashes, URLs, domains, IPs.
+  * python-magic – Detect file types (useful in enrichment).
+  * pefile – Parse PE files for static analysis.
+
+* Threat Intelligence / Malware & File Analysis APIs
+
+  * VirusTotal API – file, URL, domain, IP reputation, pivoting.
+  * Hybrid Analysis – malware analysis reports and file intelligence.
+  * MalShare / MalwareBazaar – downloadable malware samples and metadata.
+  * Abuse.ch Feeds – malware domains, ransomware, and botnet trackers.
+  * Any.Run API – sandbox analysis (if needed, mainly OSINT: network connections, URLs).
+
+* Network / IP / Domain Recon Libraries
+
+  * dnspython – DNS queries, reverse lookups, zone transfers.
+  * python-whois – Fetch WHOIS info for domains.
+  * ipwhois – ASN and IP ownership info.
+
+* Network / IP / Domain Recon APIs
+
+  * PassiveTotal / RiskIQ – passive DNS, domain history, subdomains.
+  * SecurityTrails – DNS history, WHOIS, domain/IP relationships.
+  * Shodan – internet-connected hosts, banners, open ports.
+  * Censys – host and certificate scans, IP metadata.
+  * Farsight DNSDB – passive DNS historical data.
+
+* URL & Phishing Intelligence Libraries
+
+  * urlscan – Query URLScan.io programmatically.
+  * googlesearch-python – Search Google programmatically.
+
+* URL & Phishing Intelligence APIs
+
+  * URLScan.io API – URL scanning, domain connections, screenshots.
+  * PhishTank – phishing URL reports.
+  * Google Safe Browsing – URL threat classification.
+  * APIVoid – URL, domain, IP, and email reputation services.
+
+* Social Media / OSINT Profiling Libraries
+
+  * Tweepy – Twitter/X API access.
+  * praw – Reddit API access.
+  * instaloader – Download public Instagram profiles/posts.
+  * linkedin-api – Access LinkedIn public data (non-official).
+
+* Social Media / OSINT Profiling APIs
+
+  * Twitter / X API – profile data, tweets, mentions.
+  * Facebook Graph API – public pages, posts, connections (limited).
+  * LinkedIn API / Scraping (public) – company/employee info.
+  * Reddit API – posts, comments, subreddits.
+  * Instagram Graph API – public profiles/posts.
+
+* Certificates / SSL / Infrastructure APIs
+
+  * Censys API – certificates, SSL/TLS details.
+  * crt.sh API – certificate transparency search.
+  * CertSpotter / Facebook Certificate Transparency – track domains via certificates.
+
+* OSINT Search Engines & Aggregators APIs
+
+  * Google Custom Search / Programmable Search – web footprinting.
+  * Bing Search API / Microsoft Cognitive Services – web search and entity extraction.
+  * IntelTechniques OSINT Tools – people, domain, and email recon.
+  * Spyse – domain/IP/host enumeration and metadata.
+
+* Social Engineering / Email OSINT Libraries
+
+  * haveibeenpwned – Check email breaches.
+  * emailrep – Email reputation and threat scoring.
+  * dehashed-python – Search email/username breaches.
+
+* Social Engineering / Email OSINT APIs
+
+  * HaveIBeenPwned API – breached email accounts.
+  * Hunter.io – email format discovery, domain email patterns.
+  * EmailRep.io – email reputation and threat scoring.
+  * Dehashed – breached emails, usernames, passwords.
+
+* Geolocation & Mapping Libraries
+
+  * geopy – Geocoding addresses and coordinates.
+  * folium – Map visualization for IPs/domains.
+  * maxminddb – IP geolocation database access.
+
+* Geolocation & Mapping APIs
+
+  * Google Maps / Places API – geolocation, addresses, POIs.
+  * OpenStreetMap / Nominatim – geocoding and location OSINT.
+  * MaxMind GeoIP / IP2Location – IP geolocation.
+
+* Other Enrichment / Graph / Relationships Libraries
+
+  * networkx – Build and analyze graphs of relationships (files, domains, IPs).
+  * pyvis – Visualize network graphs interactively in browser.
+  * igraph – Advanced graph analysis for OSINT clusters.
+
+* Other Enrichment / Graph / Relationships APIs
+
+  * MISP – threat intelligence sharing, indicator enrichment.
+  * OpenCTI – threat actor, malware, and campaign relationships.
+  * SpiderFoot HX API – automated OSINT for domains, IPs, emails, names.
+  * CIRCL Passive DNS – historical DNS infrastructure.
+
+
+```
+
+## APIs for OSINT
+
+```
+
+* Threat Intelligence / Malware & File Analysis
+
+  * VirusTotal API – file, URL, domain, IP reputation, pivoting.
+  * Hybrid Analysis – malware analysis reports and file intelligence.
+  * MalShare / MalwareBazaar – downloadable malware samples and metadata.
+  * Abuse.ch Feeds – malware domains, ransomware, and botnet trackers.
+  * Any.Run API – sandbox analysis (if needed, but mainly OSINT: network connections, URLs).
+
+* Domain & DNS Intelligence
+
+  * PassiveTotal / RiskIQ – passive DNS, domain history, subdomains.
+  * SecurityTrails – DNS history, WHOIS, domain/IP relationships.
+  * WhoisXML API – WHOIS, domain owner, registrar info.
+  * Shodan – internet-connected hosts, banners, open ports.
+  * Censys – host and certificate scans, IP metadata.
+  * Farsight DNSDB – passive DNS historical data.
+
+* IP / Network Intelligence
+
+  * IPinfo.io – ASN, geolocation, hosting provider.
+  * AbuseIPDB – IP reputation, reports, malicious activity.
+  * GreyNoise – background internet noise, scanning infrastructure.
+  * Shodan / Censys – network scanning data, host vulnerabilities.
+
+* URL & Phishing Intelligence
+
+  * URLScan.io API – URL scanning, domain connections, screenshots.
+  * PhishTank – phishing URL reports.
+  * Google Safe Browsing – URL threat classification.
+  * APIVoid – URL, domain, IP, and email reputation services.
+
+* Social Media / OSINT Profiling
+
+  * Twitter / X API – profile data, tweets, mentions.
+  * Facebook Graph API – public pages, posts, connections (limited).
+  * LinkedIn API / Scraping (public) – company/employee info.
+  * Reddit API – posts, comments, subreddits.
+  * Instagram Graph API – public profiles/posts.
+
+* Certificates / SSL / Infrastructure
+
+  * Censys API – certificates, SSL/TLS details.
+  * crt.sh API – certificate transparency search.
+  * CertSpotter / Facebook Certificate Transparency – track domains via certificates.
+
+* OSINT Search Engines & Aggregators
+
+  * Google Custom Search / Programmable Search – web footprinting.
+  * Bing Search API / Microsoft Cognitive Services – web search and entity extraction.
+  * IntelTechniques OSINT Tools – people, domain, and email recon.
+  * Spyse – domain/IP/host enumeration and metadata.
+
+* Social Engineering / Email OSINT
+
+  * HaveIBeenPwned API – breached email accounts.
+  * Hunter.io – email format discovery, domain email patterns.
+  * EmailRep.io – email reputation and threat scoring.
+  * Dehashed – breached emails, usernames, passwords.
+
+* Geolocation & Mapping
+
+  * Google Maps / Places API – geolocation, addresses, POIs.
+  * OpenStreetMap / Nominatim – geocoding and location OSINT.
+  * MaxMind GeoIP / IP2Location – IP geolocation.
+
+* Other Enrichment / Graph / Relationships
+
+  * MISP – threat intelligence sharing, indicator enrichment.
+  * OpenCTI – threat actor, malware, and campaign relationships.
+  * SpiderFoot HX API – automated OSINT for domains, IPs, emails, names.
+  * CIRCL Passive DNS – historical DNS infrastructure.
+
 
 
 ```
