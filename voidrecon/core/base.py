@@ -221,6 +221,8 @@ class Recon():
             self.data_cur = self.data_con.cursor()
             self.tasks_con = sqlite3.connect(tasks_file_path)
             self.tasks_cur = self.tasks_con.cursor()
+            print(f"Data : {self.data_cur}")
+            print(f"tasks : {self.tasks_cur}")
         except Exception as e:
             print(f"Failed to activate the databases: {e}")
 
@@ -244,6 +246,7 @@ class Recon():
         self.data_cur.execute('CREATE TABLE IF NOT EXISTS profiles (username TEXT, resource TEXT, url TEXT, category TEXT, notes TEXT, module TEXT)')
         self.data_cur.execute('CREATE TABLE IF NOT EXISTS repositories (name TEXT, owner TEXT, description TEXT, resource TEXT, category TEXT, url TEXT, notes TEXT, module TEXT)')
         self.data_cur.execute('CREATE TABLE IF NOT EXISTS dashboard (module TEXT PRIMARY KEY, runs INT)')
+        self.data_cur.execute('CREATE TABLE IF NOT EXISTS whois (domain_name TEXT, registrar TEXT, creation_date TEXT, expiration_date TEXT, name_servers TEXT, emails TEXT, status TEXT, module TEXT)')
         self.data_cur.execute('PRAGMA user_version = 10')
         self.data_con.commit()
 
@@ -257,7 +260,7 @@ class Recon():
             query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
             self.data_cur.execute(query, values)
             self.data_con.commit()
-            #print("[+].data_con.execute executed successfully.")
+            print("[+].data_con.execute executed successfully.")
             
         except Exception as e:
             print(f"[!] Failed to insert into table {table_name}: {e}")  
@@ -282,7 +285,7 @@ class Recon():
             query = f"INSERT INTO tasks ({columns}) VALUES ({placeholders})"
             self.tasks_cur.execute(query, values)
             self.tasks_con.commit()
-            #print("[+].data_con.execute executed successfully.")
+            print("[+]task .data_con.execute executed successfully.")
             
         except Exception as e:
             print(f"[!] Failed to insert into table tasks: {e}") 
@@ -435,9 +438,10 @@ class Recon():
         try:
             mod_class = getattr(self.current_module, 'Recon')
             instance = mod_class(self.options)
-            instance.run()
+            collected_data = instance.run()
             data["end_time"] = datetime.datetime.now()
-            self.log_tasks(data)
+            self.log_tasks(data) 
+            self.insert_into_table(collected_data["module_name"], collected_data["data"]) 
             return True
         except KeyboardInterrupt:
                 print("[!] Interrupted by user.")
@@ -450,7 +454,6 @@ class Recon():
 
 
         
-
 
 
 

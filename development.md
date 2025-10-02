@@ -72,7 +72,6 @@ This file contains development strategies
     - framework.py - shell interface
     - web - web interface (accessed through browser)
 
-
 ```
 self.recon.insert_into_table("domains", {
     "domain": "example.com",
@@ -109,22 +108,28 @@ self.log_tasks("tasks", {
 
     # VoidRecon Database Tables
 
-    - companies — Stores company names and related organizational details.
-    - contacts — Contains personal information such as names, titles, and phone numbers.
-    - credentials — Holds usernames, passwords, or hashes collected during recon.
-    - domains — Lists domain names discovered as part of the target scope.
-    - emails — Contains email addresses found during information gathering.
-    - hosts — Stores hostnames and IP addresses related to targets.
-    - locations — Records physical or geographical location data.
-    - netblocks — IP address ranges (CIDR blocks) associated with targets.
-    - ports — Details open ports and associated services on hosts.
-    - profiles — Social media and user profile data (e.g., LinkedIn, GitHub).
-    - vulnerabilities — Information on vulnerabilities (CVEs or custom) linked to assets.
-    - websites — URLs of websites discovered within the reconnaissance.
-    - pages — Metadata about individual web pages such as titles and hashes.
-    - repositories — Public code repositories connected to profiles or domains.
+    # - companies — Stores company names and related organizational details.
+    # - contacts — Contains personal information such as names, titles, and phone numbers.
+    # - credentials — Holds usernames, passwords, or hashes collected during recon.
+    # - domains — Lists domain names discovered as part of the target scope.
+    # - hosts — Stores hostnames and IP addresses related to targets.
+    # - locations — Records physical or geographical location data.
+    # - netblocks — IP address ranges (CIDR blocks) associated with targets.
+    # - ports — Details open ports and associated services on hosts.
+    # - profiles — Social media and user profile data (e.g., LinkedIn, GitHub).
+    # - vulnerabilities — Information on vulnerabilities (CVEs or custom) linked to assets.
+    # - repositories — Public code repositories connected to profiles or domains.
     - whois — WHOIS registration data for domains.
     - modules — Logs and metadata about module executions.
     - notes — Analyst notes or custom comments on targets.
     - settings — Configuration and API keys for modules and workspaces.
+    - emails — Contains email addresses found during information gathering.
+    - websites — URLs of websites discovered within the reconnaissance.
+    - pages — Metadata about individual web pages such as titles and hashes.
+    # - leaks
+    # - dashboard 
 
+
+- whois table
+domain_name TEXT, registrar TEXT, creation_date TEXT, expiration_date TEXT, name_servers TEXT, emails TEXT, status TEXT, module TEXT
+self.data_cur.execute('CREATE TABLE IF NOT EXISTA whois (domain_name TEXT, registrar TEXT, creation_date TEXT, expiration_date TEXT, name_servers TEXT, emails TEXT, status TEXT, module TEXT)')
