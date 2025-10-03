@@ -1,0 +1,22 @@
+mode: standard   # or: stealth
+
+standard:
+  max_concurrent_requests: 20
+  cache_ttl_seconds: 21600 # 6 hours
+  use_proxies: false
+  tor_enabled: false
+  api_prefetch: true
+
+stealth:
+  max_concurrent_requests: 3
+  cache_ttl_seconds: 604800 # 7 days
+  use_proxies: true
+  tor_enabled: false  # toggle carefully
+  proxy_pool_file: proxies.json
+  rate_limit_per_proxy: 5_per_min
+  api_prefetch: true  # prefer cached responses
+
+logging:
+  level: INFO
+  encrypt_logs: true
+  redact_sensitive: true

@@ -133,3 +133,13 @@ self.log_tasks("tasks", {
 - whois table
 domain_name TEXT, registrar TEXT, creation_date TEXT, expiration_date TEXT, name_servers TEXT, emails TEXT, status TEXT, module TEXT
 self.data_cur.execute('CREATE TABLE IF NOT EXISTA whois (domain_name TEXT, registrar TEXT, creation_date TEXT, expiration_date TEXT, name_servers TEXT, emails TEXT, status TEXT, module TEXT)')
+
+
+- auxiliary
+- credentials
+- custom
+- network
+- vulns
+- webrecon
+- whois
+- utils

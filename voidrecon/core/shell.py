@@ -303,10 +303,21 @@ switch workspace <workspace name>            Change the workspace
             for row in rows:
                 for i in row:
                     print(i)
-
         except Exception as e:
             print(e)
             return
+
+    def do_data(self, arg):
+
+        try: 
+            rows = self.recon.get_data(arg)
+            for row in rows:
+                for i in row:
+                    print(i)
+        except Exception as e:
+            print(e)
+            return
+
 
 
 
