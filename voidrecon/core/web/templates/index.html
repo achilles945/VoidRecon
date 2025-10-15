@@ -1,14 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Flask Button</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-    <h1>Click the Button</h1>
-    <button id="myButton">Click Me</button>
-    <p id="responseText"></p>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VoidRecon — Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
+  <body>
+    <div id="app" class="app">
+      <aside class="sidebar">
+        <h1 class="logo">VoidRecon</h1>
+
+        <div class="workspace-section">
+          <label for="workspace-select">Workspace</label>
+          <select id="workspace-select"></select>
+
+          <div class="ws-actions">
+            <button id="refresh-workspaces">Refresh</button>
+          </div>
+        </div>
+
+        <div class="tables-list">
+          <h2>Data Collections</h2>
+          <ul id="tables"></ul>
+        </div>
+
+        <div class="footer">
+          <small>Local dashboard — Flask on 127.0.0.1</small>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="main-header">
+          <h2 id="main-title">Dashboard</h2>
+
+          <div class="controls">
+            <button id="export-csv" disabled>Export CSV</button>
+          </div>
+        </header>
+
+        <section class="content">
+          <div id="table-container" class="table-container">
+            <div id="loader" class="loader hidden">Loading…</div>
+            <div id="table-wrapper"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/static/script.js"></script>
+  </body>
 </html>

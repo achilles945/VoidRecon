@@ -67,7 +67,7 @@ class Recon():
     def load_module(self, arg):
         # logic to load module
         self.module_name = arg 
-        full_path = f'voidrecon.modules.{self.module_name}'
+        full_path = f'voidrecon.modules.{arg}'
         self.current_module = importlib.import_module(full_path)
         self.options = getattr(self.current_module, 'option_template')
 

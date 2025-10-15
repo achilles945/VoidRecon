@@ -1,10 +1,244 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin-top: 50px;
+:root {
+  --bg: #18181B;
+  --panel: #23232B;
+  --muted: #A0A0B2;
+  --accent: #10A37F;
+  --card: #222226;
+  --header-bg: #202024;
+  --border: #2B2B31;
+  --hover: rgba(16,163,127,0.12);
+  --text: #FAFAFA;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 300px;
+  background: var(--panel);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: var(--accent);
+}
+
+.workspace-section {
+  margin-bottom: 18px;
+}
+
+.workspace-section label {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+#workspace-select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #17191c;
+  color: var(--text);
+}
+
+.ws-actions {
+  margin-top: 8px;
+}
+
+.ws-actions button {
+  padding: 6px 16px;
+  border-radius: 6px;
+  border: none;
+  background: var(--accent);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.ws-actions button:hover {
+  background: #16be95;
+}
+
+.tables-list {
+  flex: 1;
+  overflow: auto;
+}
+
+.tables-list h2 {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 14px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+#tables {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+
+#tables li {
+  padding: 10px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 6px;
+  background: var(--card);
+  transition: outline 0.15s, background 0.12s;
+  color: var(--text);
+  font-size: 15px;
+}
+
+#tables li:hover {
+  outline: 1px solid var(--accent);
+  background: var(--hover);
+}
+
+#tables li.active {
+  background: linear-gradient(90deg, rgba(16,163,127,0.18), transparent 80%);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.footer {
+  padding-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.main {
+  flex: 1;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.main-header h2 {
+  margin: 0;
+  color: var(--accent);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.controls button {
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: none;
+  background: var(--accent);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+  transition: background 0.2s;
+}
+
+.controls button:disabled {
+  background: #464a54;
+  cursor: not-allowed;
+  color: #d6ede9;
+}
+
+.controls button:hover:enabled {
+  background: #16be95;
+}
+
+.content {
+  margin-top: 18px;
+  flex: 1;
+  overflow: auto;
+}
+
+.table-container {
+  background: var(--card);
+  padding: 12px;
+  border-radius: 8px;
+  min-height: 200px;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.06);
+}
+
+.loader {
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.hidden {
+  display: none;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0;
+}
+
+.table th,
+.table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;  /* Center align text */
+  font-size: 14px;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  background: var(--header-bg);
+  z-index: 2;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover {
+  background: var(--hover);
+}
+
+@media (max-width: 800px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main {
+    padding: 12px;
+  }
 }

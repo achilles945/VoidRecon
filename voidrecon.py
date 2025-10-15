@@ -17,8 +17,9 @@ def main():
     args = parser.parse_args() 
     if args.web :
         try: 
-            web = app.FlaskApp()
-            web.run(debug=True)  
+            web = app.FlaskApp
+            web.run(debug=True)
+ 
         except AttributeError as e:
             print(e)
         except Exception as e:
