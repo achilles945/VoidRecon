@@ -221,8 +221,6 @@ class Recon():
             self.data_cur = self.data_con.cursor()
             self.tasks_con = sqlite3.connect(tasks_file_path)
             self.tasks_cur = self.tasks_con.cursor()
-            print(f"Data : {self.data_cur}")
-            print(f"tasks : {self.tasks_cur}")
         except Exception as e:
             print(f"Failed to activate the databases: {e}")
 
@@ -260,7 +258,7 @@ class Recon():
             query = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
             self.data_cur.execute(query, values)
             self.data_con.commit()
-            print("[+].data_con.execute executed successfully.")
+            print("[+] Collected Data stored successfully")
             
         except Exception as e:
             print(f"[!] Failed to insert into table {table_name}: {e}")  
@@ -285,7 +283,7 @@ class Recon():
             query = f"INSERT INTO tasks ({columns}) VALUES ({placeholders})"
             self.tasks_cur.execute(query, values)
             self.tasks_con.commit()
-            print("[+]task .data_con.execute executed successfully.")
+            print("[+] Task logged successfully.")
             
         except Exception as e:
             print(f"[!] Failed to insert into table tasks: {e}") 
