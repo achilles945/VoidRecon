@@ -1,8 +1,8 @@
 ## OSINT module list
 
-```
 
-- High priority (core capabilities)
+
+### High priority (core capabilities)
 
 - Passive DNS / Historical DNS lookup  
   Purpose: Retrieve historical/current DNS records (A, AAAA, CNAME, MX, NS).  
@@ -39,7 +39,7 @@
   Outputs: ASN, prefixes, owner, country.  
   Deps: ipwhois, Team Cymru, MaxMind lite.  
 
-- Identity & people search
+### Identity & people search
 
 - Email harvest (passive only)  
   Purpose: Collect emails (from search engines, breach APIs).  
@@ -69,7 +69,7 @@
   Outputs: carrier, type, associated accounts (where available).  
   Deps: Numverify, social lookup.  
 
-- Social media & content analysis
+### Social media & content analysis
 
 - Post / tweet search & archive (social media)  
   Purpose: Search posts by keywords, user, timeframe.  
@@ -92,7 +92,7 @@
   Outputs: transcripts, upload dates, subscribers.  
   Deps: pytube, YouTube Data API.  
 
-- Infrastructure & metadata
+### Infrastructure & metadata
 
 - Technology fingerprinting (passive headers only)  
   Purpose: Detect CMS, frameworks, server software from public data.  
@@ -108,7 +108,7 @@
   Outputs: domain cluster, registration dates.  
   Deps: Domain DB APIs (SecurityTrails, WhoisXML).  
 
-- Search & discovery engines
+### Search & discovery engines
 
 - Google dork / search engine harness  
   Purpose: Run targeted dorks across search engines and aggregate results.  
@@ -131,7 +131,7 @@
   Outputs: paste entries, leak metadata.  
   Deps: Paste APIs, HaveIBeenPwned, GitHub (for accidental commits).  
 
-- Geolocation & mapping
+### Geolocation & mapping
 
 - Geolocation from metadata & IPs  
   Purpose: Map IPs/images/metadata to coordinates.  
@@ -147,7 +147,7 @@
   Outputs: Graph file (GraphML, JSON), interactive HTML (pyvis).  
   Deps: networkx, pyvis.  
 
-- Content & language analysis
+### Content & language analysis
 
 - Language detection & translation  
   Purpose: Detect language of text and optionally translate.  
@@ -170,7 +170,7 @@
   Outputs: sentiment aggregation, trending list.  
   Deps: transformers or lighter sentiment libs.  
 
-- Document & artifact processing
+### Document & artifact processing
 
 - PDF/Document extractor & metadata reader  
   Purpose: Extract text, metadata, embedded links, author.  
@@ -186,7 +186,7 @@
   Outputs: matches with file/line/context.  
   Deps: GitHub API, pygit2.  
 
-- Automation & enrichment
+### Automation & enrichment
 
 - API aggregator / enrichment module  
   Purpose: Given an entity (domain/email/IP), call multiple enrichment APIs and merge results.  
@@ -202,7 +202,7 @@
   Outputs: time-series results, alerts.  
   Deps: APScheduler, DB.  
 
-- Utility & hygiene
+### Utility & hygiene
 
 - Results exporter (JSON/CSV/HTML)  
   Purpose: Export collected data in standard formats and templates.  
@@ -225,7 +225,7 @@
   Outputs: effective request logs.  
   Deps: proxy providers, requests sessions.  
 
-- Nice-to-have / advanced
+### Nice-to-have / advanced
 
 - OCR & handwriting transcription  
   Purpose: Extract text from images/photos (e.g., screenshots, documents).  
@@ -247,7 +247,7 @@
   Options: similarity threshold, manual whitelist.  
   Outputs: deduped dataset, clusters.  
 
-- Legal & ethical module
+### Legal & ethical module
 
 - Compliance / legality checker  
   Purpose: Flag actions that may violate TOS, local law, or privacy concerns (e.g., active exploitation, scraping sensitive data).  
@@ -255,11 +255,10 @@
   Outputs: warnings, recommended mitigations.  
 
 
-```
+
 
 
 ## Python OSINT Library list
-```
 
 * Threat Intelligence / Malware & File Analysis Libraries
 
@@ -368,11 +367,10 @@
   * CIRCL Passive DNS – historical DNS infrastructure.
 
 
-```
 
 ## APIs for OSINT
 
-```
+
 
 * Threat Intelligence / Malware & File Analysis
 
@@ -447,5 +445,3 @@
   * CIRCL Passive DNS – historical DNS infrastructure.
 
 
-
-```

@@ -34,6 +34,7 @@ class Recon():
         self.tasks_cur = None
 
 
+
     #==================================================
     # System & Utility Functions
     #==================================================
@@ -217,12 +218,23 @@ class Recon():
 
     def activate_db(self, data_file_path, tasks_file_path):
         try:
-            self.data_con = sqlite3.connect(data_file_path)
+            # --- Close existing connections before opening new ones ---
+            if self.data_con:
+                self.data_con.close()
+            if self.tasks_con:
+                self.tasks_con.close()
+
+            # --- Create new database connections and cursors ---
+            self.data_con = sqlite3.connect(data_file_path, check_same_thread=False)
             self.data_cur = self.data_con.cursor()
-            self.tasks_con = sqlite3.connect(tasks_file_path)
+
+            self.tasks_con = sqlite3.connect(tasks_file_path, check_same_thread=False)
             self.tasks_cur = self.tasks_con.cursor()
+
+
         except Exception as e:
             print(f"Failed to activate the databases: {e}")
+
 
 
     def create_tasks_db(self):
@@ -332,22 +344,31 @@ class Recon():
             return e 
 
 
-
     def switch_workspace(self, workspace_name):
-        
         workspace_path = Path.home() / ".voidrecon" / "workspaces" / f"{workspace_name}"
         data_file_path = workspace_path / "data.db"
         tasks_file_path = workspace_path / "tasks.db"
-        
+
         if not workspace_path.exists():
             return f"[!] No workspace {workspace_name} found"
+
         try:
-            self.workspace = workspace_name
+            # --- Ensure previous connections are closed ---
+            if self.data_con:
+                self.data_con.close()
+            if self.tasks_con:
+                self.tasks_con.close()
+
+            # --- Activate the new workspace databases ---
             self.activate_db(data_file_path, tasks_file_path)
+
+            # --- Update workspace name and confirm ---
             self.workspace = workspace_name
             return f"[+] Workspace changed to {self.workspace} successfully"
+
         except Exception as e:
             return f"[!] Cannot switch workspace: {e}"
+
         
 
 

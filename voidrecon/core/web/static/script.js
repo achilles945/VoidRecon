@@ -8,6 +8,7 @@ const exportBtn = document.getElementById("export-csv");
 const refreshBtn = document.getElementById("refresh-workspaces");
 const mainTitle = document.getElementById("main-title");
 
+
 let currentWorkspace = null;
 let currentTable = null;
 let currentTableData = [];
@@ -35,6 +36,8 @@ async function loadWorkspaces() {
     if (workspaces.length > 0) {
       currentWorkspace = workspaces[0];
       workspaceSelect.value = currentWorkspace;
+      mainTitle.textContent = `${currentWorkspace}`;
+      tableWrapper.innerHTML = "<p>Select a table to view data</p>";
       loadTables(currentWorkspace);
     }
   } catch (err) {
@@ -47,11 +50,14 @@ async function loadTables(workspace) {
   if (!workspace) return;
 
   showLoader(true);
+  tablesList.innerHTML = "";
+  tableWrapper.innerHTML = "<p>Select a table to view data</p>";
+  mainTitle.textContent = `${workspace}`;
+
   try {
     const res = await fetch(`${API_BASE}/workspace/${workspace}/tables`);
     const tables = await res.json();
 
-    tablesList.innerHTML = "";
     tables.forEach(t => {
       const li = document.createElement("li");
       li.textContent = t;
@@ -68,6 +74,7 @@ async function loadTables(workspace) {
     showLoader(false);
   }
 }
+
 
 // Load table data
 async function loadTableData(workspace, table) {
@@ -159,6 +166,15 @@ exportBtn.addEventListener("click", () => {
   a.download = `${currentWorkspace}_${currentTable}.csv`;
   a.click();
   URL.revokeObjectURL(url);
+});
+
+// Fix: handle workspace change event
+workspaceSelect.addEventListener("change", (e) => {
+  currentWorkspace = e.target.value;
+  mainTitle.textContent = `${currentWorkspace}`;
+  tablesList.innerHTML = "";
+  tableWrapper.innerHTML = "<p>Select a table to view data</p>";
+  loadTables(currentWorkspace);
 });
 
 // Refresh workspaces
